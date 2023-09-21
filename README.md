@@ -1,31 +1,45 @@
 # Dio Santander Restful Api
 Restful API developed for Santander's Java BackEnd Bootcamp.
 
+## Class Diagram (API's domain)
+
 ```mermaid
  classDiagram
-    User <--> WorkoutProgram
-    Teacher <--> WorkoutProgram
+    User "1" <-- "N" WorkoutProgram
+    Teacher "1" <-- "N" WorkoutProgram
+    WorkoutProgram "1" <-- "N" Workout
+    Workout "1" <-- "N" Exercise
 
     class User {
-        UUID id
+        String id
         String firstName
         String surname
         String sex
         Int age
         Float weight
         Float height
-        ArrayList~Int~ workoutProgramIds
+        ArrayList~WorkoutProgram~ workoutPrograms
     }
     class Teacher {
-        UUID id
+        String id
         String firstName
         String surname
-        ArrayList~Int~ workoutProgramIds
+        ArrayList~WorkoutPrograms~ workoutPrograms
     }
     class WorkoutProgram {
-        UUID id
-        Int userId
-        Int teacherId
-        HashMap~String.ArrayList~String~~ workouts
+        String id
+        User user
+        Teacher teacher
+        ArrayList~Workout~ workouts
+    }
+    class Workout {
+        String id
+        ArrayList~Exercise~ exercises
+    }
+    class Exercise {
+        String id
+        String exercise
+        String duration
+        String observation
     }
 ```
