@@ -1,14 +1,18 @@
 package ednax.dio.santander.restapi.models;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,19 +26,19 @@ import lombok.NoArgsConstructor;
 public class WorkoutProgramModel {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @OneToOne
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "workout_user_id")
     private UserModel user;
 
-    @OneToOne
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
     private TeacherModel teacher;
 
-    @OneToMany
-    @Column(nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
     private ArrayList<WorkoutModel> workouts;
 
 }
