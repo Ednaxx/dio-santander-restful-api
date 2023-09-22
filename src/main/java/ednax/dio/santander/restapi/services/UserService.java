@@ -11,9 +11,9 @@ public interface UserService {
 
     UserResponseDTO findById(String id);
     
-    UserResponseDTO create(UserRequestDTO user);
+    UserResponseDTO create(UserRequestDTO request);
 
-    UserResponseDTO update(String id, UserRequestDTO user);
+    UserResponseDTO update(String id, UserRequestDTO request);
 
     void delete(String id);
 

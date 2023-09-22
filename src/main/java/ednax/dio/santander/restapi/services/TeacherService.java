@@ -11,9 +11,9 @@ public interface TeacherService {
 
     TeacherResponseDTO findById(String id);
     
-    TeacherResponseDTO create(TeacherRequestDTO user);
+    TeacherResponseDTO create(TeacherRequestDTO request);
 
-    TeacherResponseDTO update(String id, TeacherRequestDTO user);
+    TeacherResponseDTO update(String id, TeacherRequestDTO request);
 
     void delete(String id);
 

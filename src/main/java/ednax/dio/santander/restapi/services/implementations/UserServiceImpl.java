@@ -25,13 +25,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO create(UserRequestDTO request) {
         UserModel userToSave = modelMapper.map(request, UserModel.class);
+
+        if (userRepository.findById(userToSave.getId()).isPresent()) throw new IllegalArgumentException("This user already exists.");
+
         UserModel savedUser = userRepository.save(userToSave);
+
         return modelMapper.map(savedUser, UserResponseDTO.class);
     }
 
     @Override
     public void delete(String id) {
         var uuid = UUID.fromString(id);
+
+        if(!userRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+
         userRepository.deleteById(uuid);
     }
 
@@ -57,10 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO update(String id, UserRequestDTO user) {
+    public UserResponseDTO update(String id, UserRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        UserModel userToModify = modelMapper.map(user, UserModel.class);
+        if(!userRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+
+        UserModel userToModify = modelMapper.map(request, UserModel.class);
         userToModify.setId(uuid);
         UserModel modifiedUser = userRepository.save(userToModify);
 
