@@ -2,7 +2,10 @@ package ednax.dio.santander.restapi.models;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,6 +31,9 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(length = 55, nullable = false)
+    private String login;
+
     @Column(length = 50, nullable = false)
     private String firstName;
 
@@ -38,7 +44,8 @@ public class UserModel {
     private String sex;
 
     @Column(nullable = false)
-    private Integer age;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date birthday;
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal weight;

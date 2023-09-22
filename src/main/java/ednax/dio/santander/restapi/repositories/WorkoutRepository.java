@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ednax.dio.santander.restapi.models.UserModel;
+import ednax.dio.santander.restapi.models.WorkoutModel;
 
-public interface UserRepository extends JpaRepository<UserModel, UUID> {
+public interface WorkoutRepository extends JpaRepository<WorkoutModel, UUID> {
     
 }
