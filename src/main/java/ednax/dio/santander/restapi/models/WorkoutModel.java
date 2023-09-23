@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 public class WorkoutModel {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(length = 50, nullable = false)
     private String name;
