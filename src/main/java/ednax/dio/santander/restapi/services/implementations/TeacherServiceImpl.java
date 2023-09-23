@@ -19,16 +19,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
 
-    private final TeacherRepository teacherRepository;
+    private final TeacherRepository repository;
     private final ModelMapper modelMapper;
 
     @Override
     public TeacherResponseDTO create(TeacherRequestDTO request) {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);
 
-        if (teacherRepository.findById(teacherToSave.getId()).isPresent()) throw new IllegalArgumentException("This teacher already exists.");
+        if (repository.findById(teacherToSave.getId()).isPresent()) throw new IllegalArgumentException("This teacher already exists.");
 
-        TeacherModel savedTeacher = teacherRepository.save(teacherToSave);
+        TeacherModel savedTeacher = repository.save(teacherToSave);
 
         return modelMapper.map(savedTeacher, TeacherResponseDTO.class);
     }
@@ -37,14 +37,14 @@ public class TeacherServiceImpl implements TeacherService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
 
-        if(!teacherRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("This teacher with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("This teacher with id %s does not exists.", uuid));
 
-        teacherRepository.deleteById(uuid);
+        repository.deleteById(uuid);
     }
 
     @Override
     public List<TeacherResponseDTO> findAll() {
-        List<TeacherModel> teacherModels = teacherRepository.findAll();
+        List<TeacherModel> teacherModels = repository.findAll();
         List<TeacherResponseDTO> response = new ArrayList<>();
 
         teacherModels.forEach(teacher -> {
@@ -57,7 +57,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
-        TeacherModel teacher = teacherRepository.findById(uuid).orElseThrow(NoSuchElementException::new);
+        TeacherModel teacher = repository.findById(uuid).orElseThrow(NoSuchElementException::new);
 
         return modelMapper.map(teacher, TeacherResponseDTO.class);
     }
@@ -66,11 +66,11 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponseDTO update(String id, TeacherRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        if(!teacherRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("This teacher with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("This teacher with id %s does not exists.", uuid));
 
         TeacherModel teacherToModify = modelMapper.map(request, TeacherModel.class);
         teacherToModify.setId(uuid);
-        TeacherModel modifiedTeacher = teacherRepository.save(teacherToModify);
+        TeacherModel modifiedTeacher = repository.save(teacherToModify);
 
         return modelMapper.map(modifiedTeacher, TeacherResponseDTO.class);
     }

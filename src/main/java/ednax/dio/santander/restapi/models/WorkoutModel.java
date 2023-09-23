@@ -1,9 +1,10 @@
 package ednax.dio.santander.restapi.models;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +28,11 @@ public class WorkoutModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(length = 50, nullable = false)
+    private String name;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "exercise_id")
-    ArrayList<ExerciseModel> exercises;
+    private List<ExerciseModel> exercises;
 
 }

@@ -1,8 +1,8 @@
 package ednax.dio.santander.restapi.models;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,6 +55,6 @@ public class UserModel {
 
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "workout_program_id")
-    private ArrayList<WorkoutProgramModel> workoutPrograms;
+    private List<WorkoutProgramModel> workoutPrograms;
     
 }

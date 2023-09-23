@@ -19,16 +19,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     
-    private final UserRepository userRepository;
+    private final UserRepository repository;
     private final ModelMapper modelMapper;
 
     @Override
     public UserResponseDTO create(UserRequestDTO request) {
         UserModel userToSave = modelMapper.map(request, UserModel.class);
 
-        if (userRepository.findById(userToSave.getId()).isPresent()) throw new IllegalArgumentException("This user already exists.");
+        if (repository.findById(userToSave.getId()).isPresent()) throw new IllegalArgumentException("This user already exists.");
 
-        UserModel savedUser = userRepository.save(userToSave);
+        UserModel savedUser = repository.save(userToSave);
 
         return modelMapper.map(savedUser, UserResponseDTO.class);
     }
@@ -37,14 +37,14 @@ public class UserServiceImpl implements UserService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
 
-        if(!userRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
 
-        userRepository.deleteById(uuid);
+        repository.deleteById(uuid);
     }
 
     @Override
     public List<UserResponseDTO> findAll() {
-        List<UserModel> userModels = userRepository.findAll();
+        List<UserModel> userModels = repository.findAll();
         List<UserResponseDTO> response = new ArrayList<>();
 
         userModels.forEach(user -> {
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
 
-        UserModel user = userRepository.findById(uuid).orElseThrow(NoSuchElementException::new);
+        UserModel user = repository.findById(uuid).orElseThrow(NoSuchElementException::new);
         
         return modelMapper.map(user, UserResponseDTO.class);
     }
@@ -67,11 +67,11 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO update(String id, UserRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        if(!userRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
 
         UserModel userToModify = modelMapper.map(request, UserModel.class);
         userToModify.setId(uuid);
-        UserModel modifiedUser = userRepository.save(userToModify);
+        UserModel modifiedUser = repository.save(userToModify);
 
         return modelMapper.map(modifiedUser, UserResponseDTO.class);
     }

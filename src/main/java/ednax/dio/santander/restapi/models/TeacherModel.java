@@ -1,6 +1,6 @@
 package ednax.dio.santander.restapi.models;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -40,6 +40,6 @@ public class TeacherModel {
 
     @OneToMany
     @JoinColumn(name = "workout_program_id")
-    private ArrayList<WorkoutProgramModel> workoutPrograms;
+    private List<WorkoutProgramModel> workoutPrograms;
 
 }
