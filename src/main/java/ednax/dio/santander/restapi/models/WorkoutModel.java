@@ -1,7 +1,6 @@
 package ednax.dio.santander.restapi.models;
 
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +25,7 @@ public class WorkoutModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 50, nullable = false)
     private String name;

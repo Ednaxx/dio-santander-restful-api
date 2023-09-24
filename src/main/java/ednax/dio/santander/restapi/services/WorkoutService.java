@@ -2,6 +2,9 @@ package ednax.dio.santander.restapi.services;
 
 import java.util.List;
 
+import ednax.dio.santander.restapi.dtos.request.WorkoutRequestDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+
 public interface WorkoutService {
     
     List<WorkoutResponseDTO> findAll();
