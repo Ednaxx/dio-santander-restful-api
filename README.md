@@ -11,33 +11,36 @@ Restful API developed for Santander's Java BackEnd Bootcamp.
     Workout "1" <-- "N" Exercise
 
     class User {
-        String id
+        UUID id
+        String login
         String firstName
         String surname
         String sex
-        Int age
+        Date birthday
         Float weight
         Float height
-        ArrayList~WorkoutProgram~ workoutPrograms
+        List~WorkoutProgram~ workoutPrograms
     }
     class Teacher {
-        String id
+        UUID id
+        String username
+        String password
         String firstName
         String surname
-        ArrayList~WorkoutPrograms~ workoutPrograms
+        List~WorkoutPrograms~ workoutPrograms
     }
     class WorkoutProgram {
-        String id
+        UUID id
         User user
         Teacher teacher
-        ArrayList~Workout~ workouts
+        List~Workout~ workouts
     }
     class Workout {
-        String id
-        ArrayList~Exercise~ exercises
+        Long id
+        List~Exercise~ exercises
     }
     class Exercise {
-        String id
+        Long id
         String exercise
         String duration
         String observation
