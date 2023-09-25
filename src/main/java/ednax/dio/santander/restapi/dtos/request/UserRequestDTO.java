@@ -3,7 +3,7 @@ package ednax.dio.santander.restapi.dtos.request;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
@@ -21,8 +21,8 @@ public class UserRequestDTO {
     @NotBlank String login;
     @NotBlank String firstName;
     @NotBlank String surname;
-    @NotBlank String sex;
-    @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthday;
+    @NotNull String sex;
+    @NotNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR", timezone = "Brazil/East") Date birthday;
     @NotNull @Min(0) @Max(999) @Digits(integer = 3, fraction = 2) BigDecimal weight;
     @NotNull @Min(0) @Max(999) Integer height;
 }

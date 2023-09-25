@@ -13,47 +13,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
-import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
-import ednax.dio.santander.restapi.services.UserService;
+import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
+import ednax.dio.santander.restapi.services.WorkoutProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/workout-program")
 @RequiredArgsConstructor
-public class UserController {
+public class WorkoutProgramController {
 
-    private final UserService userService;
-    
+    // TODO: Implement access through user and teacher
+
+    private final WorkoutProgramService workoutProgramService;
+
     @GetMapping
-    ResponseEntity<List<UserResponseDTO>> getAll() {
-        var response = userService.findAll();
+    ResponseEntity<List<WorkoutProgramResponseDTO>> getAll() {
+        var response = workoutProgramService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<UserResponseDTO> getById(@PathVariable String id) {
-        var response = userService.findById(id);
+    ResponseEntity<WorkoutProgramResponseDTO> getById(@PathVariable String id) {
+        var response = workoutProgramService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    ResponseEntity<UserResponseDTO> create(@RequestBody @Valid UserRequestDTO request) {
-        var response = userService.create(request);
+    ResponseEntity<WorkoutProgramResponseDTO> create(@RequestBody @Valid WorkoutProgramRequestDTO request) {
+        var response = workoutProgramService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id) {
-        userService.delete(id);
+        workoutProgramService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<UserResponseDTO> update(@PathVariable String id, @RequestBody UserRequestDTO request) {
-        var response = userService.update(id, request);
+    ResponseEntity<WorkoutProgramResponseDTO> update(@PathVariable String id, @RequestBody WorkoutProgramRequestDTO request) {
+        var response = workoutProgramService.update(id, request);
         return ResponseEntity.ok(response);
     }
-
+    
 }

@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,11 +38,10 @@ public class UserModel {
     @Column(length = 50, nullable = false)
     private String surname;
 
-    @Column(nullable = false)
+    @Column
     private String sex;
 
     @Column(nullable = false)
-    // @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy")
     private Date birthday;
 
     @Column(nullable = false, precision = 5, scale = 2)

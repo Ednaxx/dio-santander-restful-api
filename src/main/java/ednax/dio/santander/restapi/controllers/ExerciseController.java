@@ -13,47 +13,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
-import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
-import ednax.dio.santander.restapi.services.UserService;
+import ednax.dio.santander.restapi.dtos.request.ExerciseRequestDTO;
+import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
+import ednax.dio.santander.restapi.services.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/exercise")
 @RequiredArgsConstructor
-public class UserController {
+public class ExerciseController {
 
-    private final UserService userService;
-    
+    private final ExerciseService exerciseService;
+
     @GetMapping
-    ResponseEntity<List<UserResponseDTO>> getAll() {
-        var response = userService.findAll();
+    ResponseEntity<List<ExerciseResponseDTO>> getAll() {
+        var response = exerciseService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<UserResponseDTO> getById(@PathVariable String id) {
-        var response = userService.findById(id);
+    ResponseEntity<ExerciseResponseDTO> getById(@PathVariable String id) {
+        var response = exerciseService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    ResponseEntity<UserResponseDTO> create(@RequestBody @Valid UserRequestDTO request) {
-        var response = userService.create(request);
+    ResponseEntity<ExerciseResponseDTO> create(@RequestBody @Valid ExerciseRequestDTO request) {
+        var response = exerciseService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id) {
-        userService.delete(id);
+        exerciseService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<UserResponseDTO> update(@PathVariable String id, @RequestBody UserRequestDTO request) {
-        var response = userService.update(id, request);
+    ResponseEntity<ExerciseResponseDTO> update(@PathVariable String id, @RequestBody ExerciseRequestDTO request) {
+        var response = exerciseService.update(id, request);
         return ResponseEntity.ok(response);
     }
-
+    
 }
