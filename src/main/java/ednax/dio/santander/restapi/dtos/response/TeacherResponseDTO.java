@@ -5,10 +5,17 @@ import java.util.UUID;
 
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 
-public record TeacherResponseDTO(
-    UUID id,
-    String firstName,
-    String surname,
-    String username,
-    List<WorkoutProgramModel> workouts
-) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TeacherResponseDTO {
+    UUID id;
+    String firstName;
+    String surname;
+    String username;
+    List<WorkoutProgramModel> workouts;
+}

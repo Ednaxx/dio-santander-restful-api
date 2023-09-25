@@ -44,14 +44,14 @@ public class UserModel {
     private String sex;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    // @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy")
     private Date birthday;
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal weight;
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal height;
+    @Column(nullable = false)
+    private Integer height;
 
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "workout_program_id")

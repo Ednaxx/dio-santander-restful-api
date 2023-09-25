@@ -25,8 +25,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO create(UserRequestDTO request) {
         UserModel userToSave = modelMapper.map(request, UserModel.class);
+        System.out.println(userToSave);
 
-        if (repository.findById(userToSave.getId()).isPresent()) throw new IllegalArgumentException("This user already exists.");
+        if (repository.findByLogin(userToSave.getLogin()) != null) throw new IllegalArgumentException("This user already exists.");
 
         UserModel savedUser = repository.save(userToSave);
 

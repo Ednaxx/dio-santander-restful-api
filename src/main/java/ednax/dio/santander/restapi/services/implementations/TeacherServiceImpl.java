@@ -26,7 +26,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponseDTO create(TeacherRequestDTO request) {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);
 
-        if (repository.findById(teacherToSave.getId()).isPresent()) throw new IllegalArgumentException("This teacher already exists.");
+        if (repository.findByUsername(teacherToSave.getUsername()) != null) throw new IllegalArgumentException("This teacher already exists.");
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 
