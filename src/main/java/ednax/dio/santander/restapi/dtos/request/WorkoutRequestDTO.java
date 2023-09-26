@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkoutRequestDTO{@NotBlank String name;}
+public class WorkoutRequestDTO{
+    @NotBlank
+    String name;
+    @NotBlank
+    String workoutProgramId;
+}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.TeacherResponseDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 
 public interface TeacherService {
     
@@ -16,5 +17,7 @@ public interface TeacherService {
     TeacherResponseDTO update(String id, TeacherRequestDTO request);
 
     void delete(String id);
+
+    List<WorkoutProgramResponseDTO> findTeachersWorkoutPrograms(String id);
 
 }

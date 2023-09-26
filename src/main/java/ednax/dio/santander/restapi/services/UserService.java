@@ -4,6 +4,7 @@ import java.util.List;
 
 import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 
 public interface UserService {
 
@@ -16,5 +17,7 @@ public interface UserService {
     UserResponseDTO update(String id, UserRequestDTO request);
 
     void delete(String id);
+
+    List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id);
 
 }

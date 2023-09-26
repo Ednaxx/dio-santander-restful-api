@@ -2,7 +2,6 @@ package ednax.dio.santander.restapi.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public ExerciseResponseDTO findById(String id) {
         var longId = Long.parseLong(id);
 
-        ExerciseModel exercise = repository.findById(longId).orElseThrow(NoSuchElementException::new);
+        ExerciseModel exercise = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The exercise with the specified Id does not exists."));
 
         return modelMapper.map(exercise, ExerciseResponseDTO.class);
     }

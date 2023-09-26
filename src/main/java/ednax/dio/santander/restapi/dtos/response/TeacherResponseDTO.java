@@ -16,6 +16,6 @@ public class TeacherResponseDTO {
     UUID id;
     String firstName;
     String surname;
-    String username;
+    String login;
     List<WorkoutProgramModel> workouts;
 }

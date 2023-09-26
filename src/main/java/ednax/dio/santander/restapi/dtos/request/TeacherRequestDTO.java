@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class TeacherRequestDTO {
     @NotBlank String firstName;
     @NotBlank String surname;
-    @NotBlank String username;
+    @NotBlank String login;
     @NotBlank String password;
 }

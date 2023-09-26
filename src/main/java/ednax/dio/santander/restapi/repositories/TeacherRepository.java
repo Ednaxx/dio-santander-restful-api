@@ -8,6 +8,6 @@ import ednax.dio.santander.restapi.models.TeacherModel;
 
 public interface TeacherRepository extends JpaRepository<TeacherModel, UUID> {
 
-    TeacherModel findByUsername(String username);
+    TeacherModel findByLogin(String login);
     
 }

@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/exercise")
+@RequestMapping("/exercises")
 @RequiredArgsConstructor
 public class ExerciseController {
 

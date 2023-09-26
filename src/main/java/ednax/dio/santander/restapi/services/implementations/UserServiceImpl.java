@@ -2,7 +2,6 @@ package ednax.dio.santander.restapi.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.models.UserModel;
+import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 import ednax.dio.santander.restapi.repositories.UserRepository;
 import ednax.dio.santander.restapi.services.UserService;
 import lombok.AllArgsConstructor;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
 
-        UserModel user = repository.findById(uuid).orElseThrow(NoSuchElementException::new);
+        UserModel user = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
         
         return modelMapper.map(user, UserResponseDTO.class);
     }
@@ -74,6 +75,22 @@ public class UserServiceImpl implements UserService {
         UserModel modifiedUser = repository.save(userToModify);
 
         return modelMapper.map(modifiedUser, UserResponseDTO.class);
+    }
+
+    @Override
+    public List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id) {
+        var uuid = UUID.fromString(id);
+
+        UserModel user = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
+
+        List<WorkoutProgramModel> workoutPrograms = user.getWorkoutPrograms();
+        List<WorkoutProgramResponseDTO> response = new ArrayList<>();
+
+        workoutPrograms.forEach(
+            workout -> response.add(modelMapper.map(workout, WorkoutProgramResponseDTO.class))
+            );
+            
+        return response;
     }
     
 }

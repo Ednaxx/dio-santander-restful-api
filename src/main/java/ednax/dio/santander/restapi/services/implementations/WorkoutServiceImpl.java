@@ -2,14 +2,18 @@ package ednax.dio.santander.restapi.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.WorkoutRequestDTO;
+import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+import ednax.dio.santander.restapi.models.ExerciseModel;
 import ednax.dio.santander.restapi.models.WorkoutModel;
+import ednax.dio.santander.restapi.models.WorkoutProgramModel;
+import ednax.dio.santander.restapi.repositories.WorkoutProgramRepository;
 import ednax.dio.santander.restapi.repositories.WorkoutRepository;
 import ednax.dio.santander.restapi.services.WorkoutService;
 import lombok.AllArgsConstructor;
@@ -19,13 +23,22 @@ import lombok.AllArgsConstructor;
 public class WorkoutServiceImpl implements WorkoutService {
 
     private final WorkoutRepository repository;
+    private final WorkoutProgramRepository workoutProgramRepository;
     private final ModelMapper modelMapper;
 
+    // TODO: TEST THIS OR FIND BETTER SOLUTION
 
     @Override
-    public WorkoutResponseDTO create(WorkoutRequestDTO request) {
+    public WorkoutResponseDTO create(String programId, WorkoutRequestDTO request) {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
+
+        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(programId))
+            .orElseThrow(() -> new IllegalArgumentException("The workout program with the specified Id does not exists.")
+        );
+        workoutProgram.getWorkouts().add(workoutToSave);
+
         WorkoutModel savedWorkout = repository.save(workoutToSave);
+        workoutProgramRepository.save(workoutProgram);
 
         return modelMapper.map(savedWorkout, WorkoutResponseDTO.class);
     }
@@ -55,7 +68,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutResponseDTO findById(String id) {
         var longId = Long.parseLong(id);
 
-        WorkoutModel workout = repository.findById(longId).orElseThrow(NoSuchElementException::new);
+        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists."));
 
         return modelMapper.map(workout, WorkoutResponseDTO.class);
     }
@@ -73,6 +86,19 @@ public class WorkoutServiceImpl implements WorkoutService {
         return respose;
     }
     
-    
+    public List<ExerciseResponseDTO> findWorkoutsExercises(String id) {
+        var longId = Long.parseLong(id);
+
+        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists."));
+
+        List<ExerciseModel> exercises = workout.getExercises();
+        List<ExerciseResponseDTO> response = new ArrayList<>();
+
+        exercises.forEach(
+            exercise -> response.add(modelMapper.map(exercise, ExerciseResponseDTO.class))
+            );
+            
+        return response;
+    }
 
 }

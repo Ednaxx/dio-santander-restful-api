@@ -27,7 +27,7 @@ public class TeacherModel {
     private UUID id;
 
     @Column(length = 50, nullable = false)
-    private String username;
+    private String login;
 
     @Column(length = 50, nullable = false)
     private String password;

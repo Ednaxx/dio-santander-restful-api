@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.TeacherResponseDTO;
+import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.services.TeacherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,12 @@ public class TeacherController {
     @PutMapping("/{id}")
     ResponseEntity<TeacherResponseDTO> update(@PathVariable String id, @RequestBody TeacherRequestDTO request) {
         var response = teacherService.update(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/workout-programs")
+    ResponseEntity<List<WorkoutProgramResponseDTO>> getTeachersWorkoutPrograms(@PathVariable String id) {
+        var response = teacherService.findTeachersWorkoutPrograms(id);
         return ResponseEntity.ok(response);
     }
     
