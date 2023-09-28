@@ -26,5 +26,5 @@ public class UserResponseDTO {
     Date birthday;
     BigDecimal weight;
     Integer height;
-    List<WorkoutProgramModel> workouts;
+    List<WorkoutProgramModel> workoutPrograms;
 }

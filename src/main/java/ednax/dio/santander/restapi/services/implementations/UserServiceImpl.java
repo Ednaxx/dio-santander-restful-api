@@ -31,7 +31,13 @@ public class UserServiceImpl implements UserService {
 
         UserModel savedUser = repository.save(userToSave);
 
-        return modelMapper.map(savedUser, UserResponseDTO.class);
+        UserResponseDTO response = modelMapper.map(savedUser, UserResponseDTO.class);
+        
+        // Manually inserting Workout programs into response body
+        if(!(savedUser.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(savedUser.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+
+        return response;
     }
 
     @Override
@@ -49,7 +55,13 @@ public class UserServiceImpl implements UserService {
         List<UserResponseDTO> response = new ArrayList<>();
 
         userModels.forEach(user -> {
-            response.add(modelMapper.map(user, UserResponseDTO.class));
+            UserResponseDTO responseUser = modelMapper.map(user, UserResponseDTO.class);
+
+            // Manually inserting Workout programs into response body
+            if (!(user.getWorkoutPrograms() == null)) responseUser.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms()));
+            else responseUser.setWorkoutPrograms(new ArrayList<>());
+
+            response.add(responseUser);
         });
 
         return response;
@@ -61,20 +73,35 @@ public class UserServiceImpl implements UserService {
 
         UserModel user = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
         
-        return modelMapper.map(user, UserResponseDTO.class);
+        UserResponseDTO response = modelMapper.map(user, UserResponseDTO.class);
+
+        // Manually inserting Workout programs into response body
+        if(!(user.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+
+        return response;
     }
 
     @Override
     public UserResponseDTO update(String id, UserRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+        UserModel oldUser = repository.findById(uuid).orElseThrow(
+            () -> new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid)
+        ));
 
         UserModel userToModify = modelMapper.map(request, UserModel.class);
         userToModify.setId(uuid);
+        userToModify.setWorkoutPrograms(oldUser.getWorkoutPrograms());
         UserModel modifiedUser = repository.save(userToModify);
+        
+        UserResponseDTO response = modelMapper.map(modifiedUser, UserResponseDTO.class);
+        
+        // Manually inserting Workout programs into response body
+        if(!(modifiedUser.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(modifiedUser.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
 
-        return modelMapper.map(modifiedUser, UserResponseDTO.class);
+        return response;
     }
 
     @Override

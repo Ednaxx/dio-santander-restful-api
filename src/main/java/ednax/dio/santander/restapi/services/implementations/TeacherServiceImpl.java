@@ -31,7 +31,13 @@ public class TeacherServiceImpl implements TeacherService {
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 
-        return modelMapper.map(savedTeacher, TeacherResponseDTO.class);
+        TeacherResponseDTO response = modelMapper.map(savedTeacher, TeacherResponseDTO.class);
+        
+        // Manually inserting Workout programs into response body
+        if(!(savedTeacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(savedTeacher.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+
+        return response;
     }
 
     @Override
@@ -49,7 +55,13 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherResponseDTO> response = new ArrayList<>();
 
         teacherModels.forEach(teacher -> {
-            response.add(modelMapper.map(teacher, TeacherResponseDTO.class));
+            TeacherResponseDTO responseTeacher = modelMapper.map(teacher, TeacherResponseDTO.class);
+
+            // Manually inserting Workout programs into response body
+            if (!(teacher.getWorkoutPrograms() == null)) responseTeacher.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms()));
+            else responseTeacher.setWorkoutPrograms(new ArrayList<>());
+
+            response.add(responseTeacher);
         });
 
         return response;
@@ -60,20 +72,35 @@ public class TeacherServiceImpl implements TeacherService {
         var uuid = UUID.fromString(id);
         TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
 
-        return modelMapper.map(teacher, TeacherResponseDTO.class);
+        TeacherResponseDTO response = modelMapper.map(teacher, TeacherResponseDTO.class);
+
+        // Manually inserting Workout programs into response body
+        if(!(teacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+
+        return response;
     }
 
     @Override
     public TeacherResponseDTO update(String id, TeacherRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The teacher with id %s does not exists.", uuid));
+        TeacherModel oldTeacher = repository.findById(uuid).orElseThrow(
+            () -> new IllegalArgumentException(String.format("The teacher with id %s does not exists.", uuid)
+        ));
 
         TeacherModel teacherToModify = modelMapper.map(request, TeacherModel.class);
         teacherToModify.setId(uuid);
+        teacherToModify.setWorkoutPrograms(oldTeacher.getWorkoutPrograms());
         TeacherModel modifiedTeacher = repository.save(teacherToModify);
 
-        return modelMapper.map(modifiedTeacher, TeacherResponseDTO.class);
+        TeacherResponseDTO response = modelMapper.map(modifiedTeacher, TeacherResponseDTO.class);
+        
+        // Manually inserting Workout programs into response body
+        if(!(modifiedTeacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(modifiedTeacher.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+
+        return response;
     }
     
     @Override

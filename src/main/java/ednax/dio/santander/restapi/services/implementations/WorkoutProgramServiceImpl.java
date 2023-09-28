@@ -31,11 +31,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public WorkoutProgramResponseDTO create(String userId, WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
 
+        // Associate to teacher through request
+        // TODO: Alter this when implementing auth
         workoutProgramToSave.setTeacher(
             teacherRepository.findById(UUID.fromString(request.getTeacherId()))
                 .orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."))
         );
-
+        // Associate to user through URI param
         workoutProgramToSave.setUser(
             userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."))
@@ -43,7 +45,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         WorkoutProgramModel savedWorkoutProgram = workoutProgramRepository.save(workoutProgramToSave);
 
-        return modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
+        WorkoutProgramResponseDTO response = modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
+
+        // Manually inserting Workouts into response body
+        if(!(savedWorkoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(savedWorkoutProgram.getWorkouts())); 
+        else response.setWorkouts(new ArrayList<>());
+
+        return response;
     }
 
     @Override
@@ -61,7 +69,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         List<WorkoutProgramResponseDTO> response = new ArrayList<>();
 
         workoutProgramModels.forEach(workoutProgram -> {
-            response.add(modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class));
+            WorkoutProgramResponseDTO responseWorkoutProgram = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
+
+            // Manually inserting Workouts into response body
+            if (!(workoutProgram.getWorkouts() == null)) responseWorkoutProgram.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts()));
+            else responseWorkoutProgram.setWorkouts(new ArrayList<>());
+
+            response.add(responseWorkoutProgram);
         });
 
         return response;
@@ -71,10 +85,14 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public WorkoutProgramResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
 
-        WorkoutProgramModel workoutProgramModel = workoutProgramRepository.findById(uuid).orElseThrow(
+        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
             () -> new IllegalArgumentException("The workout program with the specified Id does not exists."));
 
-        WorkoutProgramResponseDTO response = modelMapper.map(workoutProgramModel, WorkoutProgramResponseDTO.class);
+        WorkoutProgramResponseDTO response = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
+
+        // Manually inserting Workouts into response body
+        if(!(workoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts())); 
+        else response.setWorkouts(new ArrayList<>());
 
         return response;
     }
@@ -89,7 +107,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         workoutProgramToModify.setId(uuid);
         WorkoutProgramModel modifiedWorkoutProgram = workoutProgramRepository.save(workoutProgramToModify);
 
-        return modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
+        WorkoutProgramResponseDTO response = modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
+        
+        // Manually inserting Workouts into response body
+        if(!(modifiedWorkoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(modifiedWorkoutProgram.getWorkouts())); 
+        else response.setWorkouts(new ArrayList<>());
+
+        return response;
     }
     
     @Override

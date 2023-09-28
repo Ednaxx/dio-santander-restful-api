@@ -17,5 +17,5 @@ public class TeacherResponseDTO {
     String firstName;
     String surname;
     String login;
-    List<WorkoutProgramModel> workouts;
+    List<WorkoutProgramModel> workoutPrograms;
 }
