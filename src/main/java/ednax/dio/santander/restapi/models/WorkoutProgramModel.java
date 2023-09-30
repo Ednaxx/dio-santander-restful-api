@@ -36,15 +36,15 @@ public class WorkoutProgramModel {
     @Column(length = 55, nullable = false)
     private String objective;
 
-    @ManyToOne
-    @JoinColumn(name = "workout_user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "workout_user_id", nullable = false)
     private UserModel user;
 
-    @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private TeacherModel teacher;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private List<WorkoutModel> workouts;
 

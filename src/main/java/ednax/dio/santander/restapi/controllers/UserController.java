@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<UserResponseDTO> update(@PathVariable String id, @RequestBody UserRequestDTO request) {
+    ResponseEntity<UserResponseDTO> update(@PathVariable String id, @RequestBody @Valid UserRequestDTO request) {
         var response = userService.update(id, request);
         return ResponseEntity.ok(response);
     }
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/workout-programs")
-    ResponseEntity<WorkoutProgramResponseDTO> createUsersWorkoutProgram(@PathVariable String id, @RequestBody WorkoutProgramRequestDTO request) {
+    ResponseEntity<WorkoutProgramResponseDTO> createUsersWorkoutProgram(@PathVariable String id, @RequestBody @Valid WorkoutProgramRequestDTO request) {
         var response = workoutProgramService.create(id, request);
         return ResponseEntity.ok(response);
     }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutProgramRequestDTO {
+    @NotBlank
     String name;
     @NotNull
     String teacherId;

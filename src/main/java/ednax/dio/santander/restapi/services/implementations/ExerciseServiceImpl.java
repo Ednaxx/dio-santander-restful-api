@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import ednax.dio.santander.restapi.dtos.request.ExerciseRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
 import ednax.dio.santander.restapi.models.ExerciseModel;
+import ednax.dio.santander.restapi.models.WorkoutModel;
 import ednax.dio.santander.restapi.repositories.ExerciseRepository;
+import ednax.dio.santander.restapi.repositories.WorkoutRepository;
 import ednax.dio.santander.restapi.services.ExerciseService;
 import lombok.AllArgsConstructor;
 
@@ -18,13 +20,21 @@ import lombok.AllArgsConstructor;
 public class ExerciseServiceImpl implements ExerciseService {
     
     private final ExerciseRepository repository;
+    private final WorkoutRepository workoutRepository;
     private final ModelMapper modelMapper;
 
 
     @Override
-    public ExerciseResponseDTO create(ExerciseRequestDTO request) {
+    public ExerciseResponseDTO create(String workoutId, ExerciseRequestDTO request) {
         ExerciseModel exerciseToSave = modelMapper.map(request, ExerciseModel.class);
+        
+        WorkoutModel workout = workoutRepository.findById(Long.parseLong(workoutId))
+            .orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists.")
+        );
+
         ExerciseModel savedExercise = repository.save(exerciseToSave);
+        workout.getExercises().add(savedExercise);
+        workoutRepository.save(workout);
 
         return modelMapper.map(savedExercise, ExerciseResponseDTO.class);
     }

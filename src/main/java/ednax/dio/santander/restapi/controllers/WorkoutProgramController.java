@@ -18,6 +18,7 @@ import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
 import ednax.dio.santander.restapi.services.WorkoutProgramService;
 import ednax.dio.santander.restapi.services.WorkoutService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -47,7 +48,7 @@ public class WorkoutProgramController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<WorkoutProgramResponseDTO> update(@PathVariable String id, @RequestBody WorkoutProgramRequestDTO request) {
+    ResponseEntity<WorkoutProgramResponseDTO> update(@PathVariable String id, @RequestBody @Valid WorkoutProgramRequestDTO request) {
         var response = workoutProgramService.update(id, request);
         return ResponseEntity.ok(response);
     }
@@ -59,7 +60,7 @@ public class WorkoutProgramController {
     }
 
     @PostMapping("/{id}/workouts")
-    ResponseEntity<WorkoutResponseDTO> createProgramsWorkout(@PathVariable String id, @RequestBody WorkoutRequestDTO request) {
+    ResponseEntity<WorkoutResponseDTO> createProgramsWorkout(@PathVariable String id, @RequestBody @Valid WorkoutRequestDTO request) {
         var response = workoutService.create(id, request);
         return ResponseEntity.ok(response);
     }

@@ -33,9 +33,8 @@ public class TeacherServiceImpl implements TeacherService {
 
         TeacherResponseDTO response = modelMapper.map(savedTeacher, TeacherResponseDTO.class);
         
-        // Manually inserting Workout programs into response body
-        if(!(savedTeacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(savedTeacher.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        // To return Workout Programs as empty Array
+        response.setWorkoutPrograms(new ArrayList<>());
 
         return response;
     }
@@ -57,9 +56,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacherModels.forEach(teacher -> {
             TeacherResponseDTO responseTeacher = modelMapper.map(teacher, TeacherResponseDTO.class);
 
-            // Manually inserting Workout programs into response body
-            if (!(teacher.getWorkoutPrograms() == null)) responseTeacher.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms()));
-            else responseTeacher.setWorkoutPrograms(new ArrayList<>());
+            setWorkoutProgramsIntoResponseBody(teacher, responseTeacher);
 
             response.add(responseTeacher);
         });
@@ -74,9 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         TeacherResponseDTO response = modelMapper.map(teacher, TeacherResponseDTO.class);
 
-        // Manually inserting Workout programs into response body
-        if(!(teacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        setWorkoutProgramsIntoResponseBody(teacher, response);
 
         return response;
     }
@@ -96,9 +91,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         TeacherResponseDTO response = modelMapper.map(modifiedTeacher, TeacherResponseDTO.class);
         
-        // Manually inserting Workout programs into response body
-        if(!(modifiedTeacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(modifiedTeacher.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        setWorkoutProgramsIntoResponseBody(modifiedTeacher, response);
 
         return response;
     }
@@ -118,6 +111,10 @@ public class TeacherServiceImpl implements TeacherService {
             
         return response;
     }
-
+    
+    private void setWorkoutProgramsIntoResponseBody(TeacherModel teacher, TeacherResponseDTO response) {
+        if(!(teacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
+    }
 
 }

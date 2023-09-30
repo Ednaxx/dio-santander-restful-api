@@ -8,6 +8,7 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -50,8 +51,8 @@ public class UserModel {
     @Column(nullable = false)
     private Integer height;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "workout_program_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "workout_program_id", nullable = true)
     private List<WorkoutProgramModel> workoutPrograms;
     
 }

@@ -33,9 +33,8 @@ public class UserServiceImpl implements UserService {
 
         UserResponseDTO response = modelMapper.map(savedUser, UserResponseDTO.class);
         
-        // Manually inserting Workout programs into response body
-        if(!(savedUser.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(savedUser.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        // To return Workout Programs as empty Array
+        response.setWorkoutPrograms(new ArrayList<>());
 
         return response;
     }
@@ -56,10 +55,7 @@ public class UserServiceImpl implements UserService {
 
         userModels.forEach(user -> {
             UserResponseDTO responseUser = modelMapper.map(user, UserResponseDTO.class);
-
-            // Manually inserting Workout programs into response body
-            if (!(user.getWorkoutPrograms() == null)) responseUser.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms()));
-            else responseUser.setWorkoutPrograms(new ArrayList<>());
+            setWorkoutProgramsIntoResponseBody(user, responseUser);
 
             response.add(responseUser);
         });
@@ -75,9 +71,7 @@ public class UserServiceImpl implements UserService {
         
         UserResponseDTO response = modelMapper.map(user, UserResponseDTO.class);
 
-        // Manually inserting Workout programs into response body
-        if(!(user.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        setWorkoutProgramsIntoResponseBody(user, response);
 
         return response;
     }
@@ -97,12 +91,12 @@ public class UserServiceImpl implements UserService {
         
         UserResponseDTO response = modelMapper.map(modifiedUser, UserResponseDTO.class);
         
-        // Manually inserting Workout programs into response body
-        if(!(modifiedUser.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(modifiedUser.getWorkoutPrograms())); 
-        else response.setWorkoutPrograms(new ArrayList<>());
+        setWorkoutProgramsIntoResponseBody(modifiedUser, response);
 
         return response;
     }
+
+    // TODO: This should be on WorkoutPrograms Service
 
     @Override
     public List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id) {
@@ -118,6 +112,11 @@ public class UserServiceImpl implements UserService {
             );
             
         return response;
+    }
+
+    private void setWorkoutProgramsIntoResponseBody(UserModel user, UserResponseDTO response) {
+        if(!(user.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms())); 
+        else response.setWorkoutPrograms(new ArrayList<>());
     }
     
 }

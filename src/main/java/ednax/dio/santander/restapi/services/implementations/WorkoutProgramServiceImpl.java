@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+import ednax.dio.santander.restapi.models.TeacherModel;
+import ednax.dio.santander.restapi.models.UserModel;
 import ednax.dio.santander.restapi.models.WorkoutModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 import ednax.dio.santander.restapi.repositories.TeacherRepository;
@@ -27,29 +29,37 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    // TODO: Fix This <--- put each method on it's own controller and set responsabilities correctly.
+
     @Override
     public WorkoutProgramResponseDTO create(String userId, WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
 
-        // Associate to teacher through request
+        TeacherModel teacher = teacherRepository.findById(UUID.fromString(request.getTeacherId()))
+                .orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
+        UserModel user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
+
         // TODO: Alter this when implementing auth
-        workoutProgramToSave.setTeacher(
-            teacherRepository.findById(UUID.fromString(request.getTeacherId()))
-                .orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."))
-        );
-        // Associate to user through URI param
-        workoutProgramToSave.setUser(
-            userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."))
-        );
+        workoutProgramToSave.setTeacher(teacher);
+        workoutProgramToSave.setUser(user);
 
         WorkoutProgramModel savedWorkoutProgram = workoutProgramRepository.save(workoutProgramToSave);
+        System.out.println("\nSAVED WORKOUT PROGRAM\n");
+        System.out.println(savedWorkoutProgram);
+
+        teacher.getWorkoutPrograms().add(savedWorkoutProgram);
+        teacherRepository.save(teacher);
+        System.out.println("\nSAVED TEACHER\n");
+
+        user.getWorkoutPrograms().add(savedWorkoutProgram);
+        userRepository.save(user);
+        System.out.println("\nSAVED USER\n");
 
         WorkoutProgramResponseDTO response = modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
 
-        // Manually inserting Workouts into response body
-        if(!(savedWorkoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(savedWorkoutProgram.getWorkouts())); 
-        else response.setWorkouts(new ArrayList<>());
+        // Returning Workouts as Empty Array
+        response.setWorkouts(new ArrayList<>());
 
         return response;
     }
@@ -71,9 +81,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         workoutProgramModels.forEach(workoutProgram -> {
             WorkoutProgramResponseDTO responseWorkoutProgram = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
 
-            // Manually inserting Workouts into response body
-            if (!(workoutProgram.getWorkouts() == null)) responseWorkoutProgram.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts()));
-            else responseWorkoutProgram.setWorkouts(new ArrayList<>());
+            setWorkoutsIntoResponseBody(workoutProgram, responseWorkoutProgram);
 
             response.add(responseWorkoutProgram);
         });
@@ -90,12 +98,12 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         WorkoutProgramResponseDTO response = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
 
-        // Manually inserting Workouts into response body
-        if(!(workoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts())); 
-        else response.setWorkouts(new ArrayList<>());
+        setWorkoutsIntoResponseBody(workoutProgram, response);
 
         return response;
     }
+
+    // Todo: set workouts into updated entity
 
     @Override
     public WorkoutProgramResponseDTO update(String id, WorkoutProgramRequestDTO request) {
@@ -109,9 +117,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         WorkoutProgramResponseDTO response = modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
         
-        // Manually inserting Workouts into response body
-        if(!(modifiedWorkoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(modifiedWorkoutProgram.getWorkouts())); 
-        else response.setWorkouts(new ArrayList<>());
+        setWorkoutsIntoResponseBody(modifiedWorkoutProgram, response);
 
         return response;
     }
@@ -131,6 +137,11 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
             );
             
         return response;
+    }
+
+    private void setWorkoutsIntoResponseBody(WorkoutProgramModel workoutProgram, WorkoutProgramResponseDTO response) {
+        if(!(workoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts())); 
+        else response.setWorkouts(new ArrayList<>());
     }
 
 }

@@ -26,8 +26,6 @@ public class WorkoutServiceImpl implements WorkoutService {
     private final WorkoutProgramRepository workoutProgramRepository;
     private final ModelMapper modelMapper;
 
-    // TODO: TEST THIS OR FIND BETTER SOLUTION
-
     @Override
     public WorkoutResponseDTO create(String programId, WorkoutRequestDTO request) {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
@@ -35,12 +33,16 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(programId))
             .orElseThrow(() -> new IllegalArgumentException("The workout program with the specified Id does not exists.")
         );
-        workoutProgram.getWorkouts().add(workoutToSave);
 
         WorkoutModel savedWorkout = repository.save(workoutToSave);
+        workoutProgram.getWorkouts().add(savedWorkout);
         workoutProgramRepository.save(workoutProgram);
 
-        return modelMapper.map(savedWorkout, WorkoutResponseDTO.class);
+        WorkoutResponseDTO response = modelMapper.map(savedWorkout, WorkoutResponseDTO.class);
+
+        setExercisesIntoResponseBody(savedWorkout, response);
+
+        return response;
     }
 
     @Override
@@ -58,7 +60,10 @@ public class WorkoutServiceImpl implements WorkoutService {
         List<WorkoutResponseDTO> response = new ArrayList<>();
 
         workoutModels.forEach(workout -> {
-            response.add(modelMapper.map(workout, WorkoutResponseDTO.class));
+            WorkoutResponseDTO workoutResponse = modelMapper.map(workout, WorkoutResponseDTO.class);
+            setExercisesIntoResponseBody(workout, workoutResponse);
+
+            response.add(workoutResponse);
         });
 
         return response;
@@ -70,7 +75,10 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists."));
 
-        return modelMapper.map(workout, WorkoutResponseDTO.class);
+        WorkoutResponseDTO response = modelMapper.map(workout, WorkoutResponseDTO.class);
+        setExercisesIntoResponseBody(workout, response);
+
+        return response;
     }
 
     @Override
@@ -81,7 +89,9 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         WorkoutModel workoutToModify = modelMapper.map(request, WorkoutModel.class);
         WorkoutModel modifiedWorkout = repository.save(workoutToModify);
+
         WorkoutResponseDTO respose = modelMapper.map(modifiedWorkout, WorkoutResponseDTO.class);
+        setExercisesIntoResponseBody(modifiedWorkout, respose);
 
         return respose;
     }
@@ -99,6 +109,12 @@ public class WorkoutServiceImpl implements WorkoutService {
             );
             
         return response;
+    }
+    
+
+    private void setExercisesIntoResponseBody(WorkoutModel workout, WorkoutResponseDTO response) {
+        if(!(workout.getExercises() == null)) response.setExercises(new ArrayList<>(workout.getExercises())); 
+        else response.setExercises(new ArrayList<>());
     }
 
 }

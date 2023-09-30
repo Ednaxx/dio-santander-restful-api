@@ -52,7 +52,7 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<TeacherResponseDTO> update(@PathVariable String id, @RequestBody TeacherRequestDTO request) {
+    ResponseEntity<TeacherResponseDTO> update(@PathVariable String id, @RequestBody @Valid TeacherRequestDTO request) {
         var response = teacherService.update(id, request);
         return ResponseEntity.ok(response);
     }
