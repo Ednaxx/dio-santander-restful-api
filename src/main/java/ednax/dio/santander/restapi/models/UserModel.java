@@ -50,7 +50,7 @@ public class UserModel {
     @Column(nullable = false)
     private Integer height;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
     private List<WorkoutProgramModel> workoutPrograms;
     
 }

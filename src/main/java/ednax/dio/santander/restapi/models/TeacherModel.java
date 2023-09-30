@@ -39,7 +39,7 @@ public class TeacherModel {
     @Column(length = 50, nullable = false)
     private String surname;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "teacher")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<WorkoutProgramModel> workoutPrograms;
 
 }
