@@ -45,16 +45,6 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         workoutProgramToSave.setUser(user);
 
         WorkoutProgramModel savedWorkoutProgram = workoutProgramRepository.save(workoutProgramToSave);
-        System.out.println("\nSAVED WORKOUT PROGRAM\n");
-        System.out.println(savedWorkoutProgram);
-
-        teacher.getWorkoutPrograms().add(savedWorkoutProgram);
-        teacherRepository.save(teacher);
-        System.out.println("\nSAVED TEACHER\n");
-
-        user.getWorkoutPrograms().add(savedWorkoutProgram);
-        userRepository.save(user);
-        System.out.println("\nSAVED USER\n");
 
         WorkoutProgramResponseDTO response = modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
 
