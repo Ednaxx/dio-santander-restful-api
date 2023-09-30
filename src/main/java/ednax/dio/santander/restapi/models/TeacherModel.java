@@ -10,7 +10,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -40,8 +39,7 @@ public class TeacherModel {
     @Column(length = 50, nullable = false)
     private String surname;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "workout_program_id", nullable = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "teacher")
     private List<WorkoutProgramModel> workoutPrograms;
 
 }

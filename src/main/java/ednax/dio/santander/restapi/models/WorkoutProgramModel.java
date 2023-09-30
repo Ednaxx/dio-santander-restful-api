@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,16 +35,16 @@ public class WorkoutProgramModel {
     @Column(length = 55, nullable = false)
     private String objective;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "workout_user_id", nullable = false)
     private UserModel user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id", nullable = false)
     private TeacherModel teacher;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "workout_id")
     private List<WorkoutModel> workouts;
 
 }
