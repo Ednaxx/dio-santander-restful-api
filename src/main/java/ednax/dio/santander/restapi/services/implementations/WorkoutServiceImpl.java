@@ -27,10 +27,10 @@ public class WorkoutServiceImpl implements WorkoutService {
     private final ModelMapper modelMapper;
 
     @Override
-    public WorkoutResponseDTO create(String programId, WorkoutRequestDTO request) {
+    public WorkoutResponseDTO create(WorkoutRequestDTO request) {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
 
-        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(programId))
+        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(request.getWorkoutProgramId()))
             .orElseThrow(() -> new IllegalArgumentException("The workout program with the specified Id does not exists.")
         );
 

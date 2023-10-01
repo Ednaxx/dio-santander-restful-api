@@ -12,7 +12,7 @@ public interface WorkoutProgramService {
 
     WorkoutProgramResponseDTO findById(String id);
     
-    WorkoutProgramResponseDTO create(String useerId, WorkoutProgramRequestDTO request);
+    WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request);
 
     WorkoutProgramResponseDTO update(String id, WorkoutProgramRequestDTO request);
 

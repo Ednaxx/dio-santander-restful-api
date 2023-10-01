@@ -96,8 +96,6 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-    // TODO: This should be on WorkoutPrograms Service
-
     @Override
     public List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id) {
         var uuid = UUID.fromString(id);

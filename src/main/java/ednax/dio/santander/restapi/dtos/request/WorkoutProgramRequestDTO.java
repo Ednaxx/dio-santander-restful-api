@@ -14,5 +14,7 @@ public class WorkoutProgramRequestDTO {
     String name;
     @NotNull
     String teacherId;
+    @NotNull
+    String userId;
     @NotBlank String objective;
 }

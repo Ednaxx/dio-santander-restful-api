@@ -29,15 +29,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    // TODO: Fix This <--- put each method on it's own controller and set responsabilities correctly.
-
     @Override
-    public WorkoutProgramResponseDTO create(String userId, WorkoutProgramRequestDTO request) {
+    public WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
 
         TeacherModel teacher = teacherRepository.findById(UUID.fromString(request.getTeacherId()))
                 .orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
-        UserModel user = userRepository.findById(UUID.fromString(userId))
+        UserModel user = userRepository.findById(UUID.fromString(request.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
 
         // TODO: Alter this when implementing auth

@@ -25,10 +25,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 
 
     @Override
-    public ExerciseResponseDTO create(String workoutId, ExerciseRequestDTO request) {
+    public ExerciseResponseDTO create(ExerciseRequestDTO request) {
         ExerciseModel exerciseToSave = modelMapper.map(request, ExerciseModel.class);
         
-        WorkoutModel workout = workoutRepository.findById(Long.parseLong(workoutId))
+        WorkoutModel workout = workoutRepository.findById(Long.parseLong(request.getWorkoutId()))
             .orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists.")
         );
 

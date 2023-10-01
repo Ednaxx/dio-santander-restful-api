@@ -11,7 +11,7 @@ public interface ExerciseService {
 
     ExerciseResponseDTO findById(String id);
 
-    ExerciseResponseDTO create(String workoutId, ExerciseRequestDTO request);
+    ExerciseResponseDTO create(ExerciseRequestDTO request);
 
     ExerciseResponseDTO update(String id, ExerciseRequestDTO request);
 

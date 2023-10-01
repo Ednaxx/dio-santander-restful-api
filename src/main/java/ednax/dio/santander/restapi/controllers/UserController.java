@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
-import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.services.UserService;
-import ednax.dio.santander.restapi.services.WorkoutProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-    private final WorkoutProgramService workoutProgramService;
     
     @GetMapping
     ResponseEntity<List<UserResponseDTO>> getAll() {
@@ -63,12 +60,6 @@ public class UserController {
     @GetMapping("/{id}/workout-programs")
     ResponseEntity<List<WorkoutProgramResponseDTO>> getUsersWorkoutPrograms(@PathVariable String id) {
         var response = userService.findUsersWorkoutPrograms(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/{id}/workout-programs")
-    ResponseEntity<WorkoutProgramResponseDTO> createUsersWorkoutProgram(@PathVariable String id, @RequestBody @Valid WorkoutProgramRequestDTO request) {
-        var response = workoutProgramService.create(id, request);
         return ResponseEntity.ok(response);
     }
 

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class ExerciseRequestDTO {
     @NotBlank String name;
     @NotBlank String duration;
+    @NotBlank String workoutId;
     String observation;
 }
 

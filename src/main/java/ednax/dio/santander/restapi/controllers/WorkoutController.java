@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ednax.dio.santander.restapi.dtos.request.ExerciseRequestDTO;
 import ednax.dio.santander.restapi.dtos.request.WorkoutRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
-import ednax.dio.santander.restapi.services.ExerciseService;
 import ednax.dio.santander.restapi.services.WorkoutService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class WorkoutController {
 
     private final WorkoutService workoutService;
-    private final ExerciseService exerciseService;
 
     @GetMapping
     ResponseEntity<List<WorkoutResponseDTO>> getAll() {
@@ -40,6 +37,12 @@ public class WorkoutController {
     ResponseEntity<WorkoutResponseDTO> getById(@PathVariable String id) {
         var response = workoutService.findById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    ResponseEntity<WorkoutResponseDTO> create(@RequestBody @Valid WorkoutRequestDTO request) {
+        var response = workoutService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
@@ -58,12 +61,6 @@ public class WorkoutController {
     ResponseEntity<List<ExerciseResponseDTO>> getWorkoutsExercises(@PathVariable String id) {
         var response = workoutService.findWorkoutsExercises(id);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/{id}/exercises")
-    ResponseEntity<ExerciseResponseDTO> createWorkoutsExercise(@PathVariable String id, @RequestBody @Valid ExerciseRequestDTO request) {
-        var response = exerciseService.create(id, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
 }
