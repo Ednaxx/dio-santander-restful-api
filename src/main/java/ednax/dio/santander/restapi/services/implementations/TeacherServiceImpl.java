@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.TeacherResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
+import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.TeacherModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 import ednax.dio.santander.restapi.repositories.TeacherRepository;
@@ -27,7 +29,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponseDTO create(TeacherRequestDTO request) {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);
 
-        if (repository.findByLogin(teacherToSave.getLogin()) != null) throw new IllegalArgumentException("This teacher already exists.");
+        if (repository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A Teacher with this login already exists.");
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 
@@ -43,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
 
-        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The teacher with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id));
 
         repository.deleteById(uuid);
     }
@@ -67,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
-        TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
+        TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id)));
 
         TeacherResponseDTO response = modelMapper.map(teacher, TeacherResponseDTO.class);
 
@@ -81,7 +83,7 @@ public class TeacherServiceImpl implements TeacherService {
         var uuid = UUID.fromString(id);
 
         TeacherModel oldTeacher = repository.findById(uuid).orElseThrow(
-            () -> new IllegalArgumentException(String.format("The teacher with id %s does not exists.", uuid)
+            () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id)
         ));
 
         TeacherModel teacherToModify = modelMapper.map(request, TeacherModel.class);
@@ -100,7 +102,7 @@ public class TeacherServiceImpl implements TeacherService {
     public List<WorkoutProgramResponseDTO> findTeachersWorkoutPrograms(String id) {
         var uuid = UUID.fromString(id);
 
-        TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
+        TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id)));
 
         List<WorkoutProgramModel> workoutPrograms = teacher.getWorkoutPrograms();
         List<WorkoutProgramResponseDTO> response = new ArrayList<>();

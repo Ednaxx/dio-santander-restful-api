@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.WorkoutRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.ExerciseModel;
 import ednax.dio.santander.restapi.models.WorkoutModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
@@ -31,7 +33,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(request.getWorkoutProgramId()))
-            .orElseThrow(() -> new IllegalArgumentException("The workout program with the specified Id does not exists.")
+            .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getWorkoutProgramId()))
         );
 
         WorkoutModel savedWorkout = repository.save(workoutToSave);
@@ -49,7 +51,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public void delete(String id) {
         var longId = Long.parseLong(id);
 
-        if(!repository.findById(longId).isPresent()) throw new IllegalArgumentException(String.format("The Workout with id %s does not exists.", longId));
+        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.CONFLICT, "A Workout Program with this login already exists.");
         
         repository.deleteById(longId);
     }
@@ -73,7 +75,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutResponseDTO findById(String id) {
         var longId = Long.parseLong(id);
 
-        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists."));
+        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
         WorkoutResponseDTO response = modelMapper.map(workout, WorkoutResponseDTO.class);
         setExercisesIntoResponseBody(workout, response);
@@ -85,7 +87,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutResponseDTO update(String id, WorkoutRequestDTO request) {
         var longId = Long.parseLong(id);
 
-        if(!repository.findById(longId).isPresent()) throw new IllegalArgumentException(String.format("The Workout with id %s does not exists.", longId));
+        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
 
         WorkoutModel workoutToModify = modelMapper.map(request, WorkoutModel.class);
         WorkoutModel modifiedWorkout = repository.save(workoutToModify);
@@ -99,7 +101,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public List<ExerciseResponseDTO> findWorkoutsExercises(String id) {
         var longId = Long.parseLong(id);
 
-        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists."));
+        WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
         List<ExerciseModel> exercises = workout.getExercises();
         List<ExerciseResponseDTO> response = new ArrayList<>();

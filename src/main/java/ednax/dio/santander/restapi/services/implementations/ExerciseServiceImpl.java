@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.ExerciseRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.ExerciseResponseDTO;
+import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.ExerciseModel;
 import ednax.dio.santander.restapi.models.WorkoutModel;
 import ednax.dio.santander.restapi.repositories.ExerciseRepository;
@@ -29,7 +31,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         ExerciseModel exerciseToSave = modelMapper.map(request, ExerciseModel.class);
         
         WorkoutModel workout = workoutRepository.findById(Long.parseLong(request.getWorkoutId()))
-            .orElseThrow(() -> new IllegalArgumentException("The workout with the specified Id does not exists.")
+            .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout with id %s does not exists.", request.getWorkoutId()))
         );
 
         ExerciseModel savedExercise = repository.save(exerciseToSave);
@@ -43,7 +45,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public void delete(String id) {
         var longId = Long.parseLong(id);
 
-        if(!repository.findById(longId).isPresent()) throw new IllegalArgumentException(String.format("The Exercise with id %s does not exists.", longId));
+        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Exercise with id %s does not exists.", id));
         
         repository.deleteById(longId);
     }
@@ -64,7 +66,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public ExerciseResponseDTO findById(String id) {
         var longId = Long.parseLong(id);
 
-        ExerciseModel exercise = repository.findById(longId).orElseThrow(() -> new IllegalArgumentException("The exercise with the specified Id does not exists."));
+        ExerciseModel exercise = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Exercise with id %s does not exists.", id)));
 
         return modelMapper.map(exercise, ExerciseResponseDTO.class);
     }
@@ -73,7 +75,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public ExerciseResponseDTO update(String id, ExerciseRequestDTO request) {
         var longId = Long.parseLong(id);
 
-        if(!repository.findById(longId).isPresent()) throw new IllegalArgumentException(String.format("The Exercise with id %s does not exists.", longId));
+        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Exercise with id %s does not exists.", id));
 
         ExerciseModel exerciseToModify = modelMapper.map(request, ExerciseModel.class);
         ExerciseModel modifiedExercise = repository.save(exerciseToModify);

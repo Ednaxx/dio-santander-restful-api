@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
+import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.UserModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 import ednax.dio.santander.restapi.repositories.UserRepository;
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO create(UserRequestDTO request) {
         UserModel userToSave = modelMapper.map(request, UserModel.class);
 
-        if (repository.findByLogin(userToSave.getLogin()) != null) throw new IllegalArgumentException("This user already exists.");
+        if (repository.findByLogin(userToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A User with this login already exists.");
 
         UserModel savedUser = repository.save(userToSave);
 
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
 
-        if(!repository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid));
+        if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", id));
 
         repository.deleteById(uuid);
     }
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO findById(String id) {
         var uuid = UUID.fromString(id);
 
-        UserModel user = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
+        UserModel user = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", id)));
         
         UserResponseDTO response = modelMapper.map(user, UserResponseDTO.class);
 
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
         var uuid = UUID.fromString(id);
 
         UserModel oldUser = repository.findById(uuid).orElseThrow(
-            () -> new IllegalArgumentException(String.format("The user with id %s does not exists.", uuid)
+            () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", id)
         ));
 
         UserModel userToModify = modelMapper.map(request, UserModel.class);
@@ -100,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id) {
         var uuid = UUID.fromString(id);
 
-        UserModel user = repository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
+        UserModel user = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", id)));
 
         List<WorkoutProgramModel> workoutPrograms = user.getWorkoutPrograms();
         List<WorkoutProgramResponseDTO> response = new ArrayList<>();

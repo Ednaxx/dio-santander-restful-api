@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.TeacherModel;
 import ednax.dio.santander.restapi.models.UserModel;
 import ednax.dio.santander.restapi.models.WorkoutModel;
@@ -34,9 +36,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
 
         TeacherModel teacher = teacherRepository.findById(UUID.fromString(request.getTeacherId()))
-                .orElseThrow(() -> new IllegalArgumentException("The teacher with the specified Id does not exists."));
+                .orElseThrow(
+                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getTeacherId()))
+                );
         UserModel user = userRepository.findById(UUID.fromString(request.getUserId()))
-                .orElseThrow(() -> new IllegalArgumentException("The user with the specified Id does not exists."));
+                .orElseThrow(
+                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", request.getUserId()))
+                );
 
         // TODO: Alter this when implementing auth
         workoutProgramToSave.setTeacher(teacher);
@@ -56,7 +62,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
 
-        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The Workout Program with id %s does not exists.", uuid));
+        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.CONFLICT, "A Workout Program with this login already exists.");
 
         workoutProgramRepository.deleteById(uuid);
     }
@@ -82,7 +88,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         var uuid = UUID.fromString(id);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
-            () -> new IllegalArgumentException("The workout program with the specified Id does not exists."));
+            () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
         WorkoutProgramResponseDTO response = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
 
@@ -97,7 +103,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public WorkoutProgramResponseDTO update(String id, WorkoutProgramRequestDTO request) {
         var uuid = UUID.fromString(id);
 
-        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new IllegalArgumentException(String.format("The Workout Program with id %s does not exists.", uuid));
+        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
 
         WorkoutProgramModel workoutProgramToModify = modelMapper.map(request, WorkoutProgramModel.class);
         workoutProgramToModify.setId(uuid);
@@ -115,7 +121,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         var uuid = UUID.fromString(id);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
-            () -> new IllegalArgumentException("The workout program with the specified Id does not exists."));
+            () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
         List<WorkoutModel> workouts = workoutProgram.getWorkouts();
         List<WorkoutResponseDTO> response = new ArrayList<>();
