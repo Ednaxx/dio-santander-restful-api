@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateUserId(id);
 
         if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", id));
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO findById(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateUserId(id);
 
         UserModel user = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", id)));
         
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO update(String id, UserRequestDTO request) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateUserId(id);
 
         UserModel oldUser = repository.findById(uuid).orElseThrow(
             () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", id)
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<WorkoutProgramResponseDTO> findUsersWorkoutPrograms(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateUserId(id);
 
         UserModel user = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", id)));
 
@@ -117,6 +117,15 @@ public class UserServiceImpl implements UserService {
     private void setWorkoutProgramsIntoResponseBody(UserModel user, UserResponseDTO response) {
         if(!(user.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(user.getWorkoutPrograms())); 
         else response.setWorkoutPrograms(new ArrayList<>());
+    }
+
+    static UUID validateUserId(String id) {
+        try {
+            return UUID.fromString(id);
+        }
+        catch (Exception e) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+        }
     }
     
 }

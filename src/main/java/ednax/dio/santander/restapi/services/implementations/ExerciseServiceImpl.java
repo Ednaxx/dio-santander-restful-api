@@ -25,12 +25,11 @@ public class ExerciseServiceImpl implements ExerciseService {
     private final WorkoutRepository workoutRepository;
     private final ModelMapper modelMapper;
 
-
     @Override
     public ExerciseResponseDTO create(ExerciseRequestDTO request) {
         ExerciseModel exerciseToSave = modelMapper.map(request, ExerciseModel.class);
         
-        WorkoutModel workout = workoutRepository.findById(Long.parseLong(request.getWorkoutId()))
+        WorkoutModel workout = workoutRepository.findById(WorkoutServiceImpl.validateWorkoutId(request.getWorkoutId()))
             .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout with id %s does not exists.", request.getWorkoutId()))
         );
 
@@ -43,7 +42,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public void delete(String id) {
-        var longId = Long.parseLong(id);
+        var longId = validateExerciseId(id);
 
         if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Exercise with id %s does not exists.", id));
         
@@ -64,7 +63,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public ExerciseResponseDTO findById(String id) {
-        var longId = Long.parseLong(id);
+        var longId = validateExerciseId(id);
 
         ExerciseModel exercise = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Exercise with id %s does not exists.", id)));
 
@@ -73,7 +72,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public ExerciseResponseDTO update(String id, ExerciseRequestDTO request) {
-        var longId = Long.parseLong(id);
+        var longId = validateExerciseId(id);
 
         if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Exercise with id %s does not exists.", id));
 
@@ -84,5 +83,14 @@ public class ExerciseServiceImpl implements ExerciseService {
         return respose;
     }
 
+    
+    Long validateExerciseId(String id) {
+        try {
+            return Long.parseLong(id);
+        }
+        catch (Exception e) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid Long id");
+        }
+    }
 
 }

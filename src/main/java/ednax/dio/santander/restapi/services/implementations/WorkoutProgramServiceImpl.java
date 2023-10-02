@@ -35,13 +35,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
 
-        TeacherModel teacher = teacherRepository.findById(UUID.fromString(request.getTeacherId()))
+        TeacherModel teacher = teacherRepository.findById(TeacherServiceImpl.validateTeacherId(request.getTeacher()))
                 .orElseThrow(
-                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getTeacherId()))
+                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getTeacher()))
                 );
-        UserModel user = userRepository.findById(UUID.fromString(request.getUserId()))
+        UserModel user = userRepository.findById(UserServiceImpl.validateUserId(request.getUser()))
                 .orElseThrow(
-                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", request.getUserId()))
+                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", request.getUser()))
                 );
 
         // TODO: Alter this when implementing auth
@@ -50,17 +50,12 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         WorkoutProgramModel savedWorkoutProgram = workoutProgramRepository.save(workoutProgramToSave);
 
-        WorkoutProgramResponseDTO response = modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
-
-        // Returning Workouts as Empty Array
-        response.setWorkouts(new ArrayList<>());
-
-        return response;
+        return modelMapper.map(savedWorkoutProgram, WorkoutProgramResponseDTO.class);
     }
 
     @Override
     public void delete(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateWorkoutProgramId(id);
 
         if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.CONFLICT, "A Workout Program with this login already exists.");
 
@@ -74,9 +69,6 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         workoutProgramModels.forEach(workoutProgram -> {
             WorkoutProgramResponseDTO responseWorkoutProgram = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
-
-            setWorkoutsIntoResponseBody(workoutProgram, responseWorkoutProgram);
-
             response.add(responseWorkoutProgram);
         });
 
@@ -85,23 +77,19 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
     @Override
     public WorkoutProgramResponseDTO findById(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateWorkoutProgramId(id);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
             () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
-        WorkoutProgramResponseDTO response = modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
-
-        setWorkoutsIntoResponseBody(workoutProgram, response);
-
-        return response;
+        return modelMapper.map(workoutProgram, WorkoutProgramResponseDTO.class);
     }
 
     // Todo: set workouts into updated entity
 
     @Override
     public WorkoutProgramResponseDTO update(String id, WorkoutProgramRequestDTO request) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateWorkoutProgramId(id);
 
         if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
 
@@ -109,16 +97,12 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         workoutProgramToModify.setId(uuid);
         WorkoutProgramModel modifiedWorkoutProgram = workoutProgramRepository.save(workoutProgramToModify);
 
-        WorkoutProgramResponseDTO response = modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
-        
-        setWorkoutsIntoResponseBody(modifiedWorkoutProgram, response);
-
-        return response;
+        return modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
     }
     
     @Override
     public List<WorkoutResponseDTO> findProgramsWorkouts(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateWorkoutProgramId(id);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
             () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
@@ -133,9 +117,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         return response;
     }
 
-    private void setWorkoutsIntoResponseBody(WorkoutProgramModel workoutProgram, WorkoutProgramResponseDTO response) {
-        if(!(workoutProgram.getWorkouts() == null)) response.setWorkouts(new ArrayList<>(workoutProgram.getWorkouts())); 
-        else response.setWorkouts(new ArrayList<>());
+    static UUID validateWorkoutProgramId(String id) {
+        try {
+            return UUID.fromString(id);
+        }
+        catch (Exception e) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+        }
     }
 
 }

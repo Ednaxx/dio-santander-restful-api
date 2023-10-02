@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void delete(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateTeacherId(id);
 
         if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id));
 
@@ -68,7 +68,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherResponseDTO findById(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateTeacherId(id);
         TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id)));
 
         TeacherResponseDTO response = modelMapper.map(teacher, TeacherResponseDTO.class);
@@ -80,7 +80,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherResponseDTO update(String id, TeacherRequestDTO request) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateTeacherId(id);
 
         TeacherModel oldTeacher = repository.findById(uuid).orElseThrow(
             () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id)
@@ -100,7 +100,7 @@ public class TeacherServiceImpl implements TeacherService {
     
     @Override
     public List<WorkoutProgramResponseDTO> findTeachersWorkoutPrograms(String id) {
-        var uuid = UUID.fromString(id);
+        var uuid = validateTeacherId(id);
 
         TeacherModel teacher = repository.findById(uuid).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id)));
 
@@ -117,6 +117,15 @@ public class TeacherServiceImpl implements TeacherService {
     private void setWorkoutProgramsIntoResponseBody(TeacherModel teacher, TeacherResponseDTO response) {
         if(!(teacher.getWorkoutPrograms() == null)) response.setWorkoutPrograms(new ArrayList<>(teacher.getWorkoutPrograms())); 
         else response.setWorkoutPrograms(new ArrayList<>());
+    }
+
+    static UUID validateTeacherId(String id) {
+        try {
+            return UUID.fromString(id);
+        }
+        catch (Exception e) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+        }
     }
 
 }

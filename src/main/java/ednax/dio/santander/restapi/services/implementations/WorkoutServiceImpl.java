@@ -2,7 +2,6 @@ package ednax.dio.santander.restapi.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutResponseDTO create(WorkoutRequestDTO request) {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
 
-        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(UUID.fromString(request.getWorkoutProgramId()))
+        WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(WorkoutProgramServiceImpl.validateWorkoutProgramId(request.getWorkoutProgramId()))
             .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getWorkoutProgramId()))
         );
 
@@ -49,7 +48,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public void delete(String id) {
-        var longId = Long.parseLong(id);
+        var longId = validateWorkoutId(id);
 
         if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.CONFLICT, "A Workout Program with this login already exists.");
         
@@ -73,7 +72,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public WorkoutResponseDTO findById(String id) {
-        var longId = Long.parseLong(id);
+        var longId = validateWorkoutId(id);
 
         WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
@@ -85,7 +84,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public WorkoutResponseDTO update(String id, WorkoutRequestDTO request) {
-        var longId = Long.parseLong(id);
+        var longId = validateWorkoutId(id);
 
         if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
 
@@ -99,7 +98,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
     
     public List<ExerciseResponseDTO> findWorkoutsExercises(String id) {
-        var longId = Long.parseLong(id);
+        var longId = validateWorkoutId(id);
 
         WorkoutModel workout = repository.findById(longId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id)));
 
@@ -117,6 +116,15 @@ public class WorkoutServiceImpl implements WorkoutService {
     private void setExercisesIntoResponseBody(WorkoutModel workout, WorkoutResponseDTO response) {
         if(!(workout.getExercises() == null)) response.setExercises(new ArrayList<>(workout.getExercises())); 
         else response.setExercises(new ArrayList<>());
+    }
+
+    static Long validateWorkoutId(String id) {
+        try {
+            return Long.parseLong(id);
+        }
+        catch (Exception e) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+        }
     }
 
 }
