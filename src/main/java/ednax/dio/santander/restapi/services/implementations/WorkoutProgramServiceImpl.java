@@ -31,8 +31,6 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    // TODO: Test UPDATE relationships
-
     @Override
     public WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);

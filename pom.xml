@@ -10,11 +10,11 @@
 	</parent>
 	<groupId>ednax</groupId>
 	<artifactId>dio.santander.restapi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>dio.santander.restapi</name>
 	<description>Rest API for Santander&apos;s Bootcamp</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
