@@ -92,7 +92,6 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherModel modifiedTeacher = repository.save(teacherToModify);
 
         TeacherResponseDTO response = modelMapper.map(modifiedTeacher, TeacherResponseDTO.class);
-        
         setWorkoutProgramsIntoResponseBody(modifiedTeacher, response);
 
         return response;
@@ -124,7 +123,7 @@ public class TeacherServiceImpl implements TeacherService {
             return UUID.fromString(id);
         }
         catch (Exception e) {
-            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+            throw new RestException(HttpStatus.BAD_REQUEST, String.format("%s is not a valid UUID", id));
         }
     }
 

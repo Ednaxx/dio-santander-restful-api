@@ -12,5 +12,5 @@ public class WorkoutRequestDTO{
     @NotBlank
     String name;
     @NotBlank
-    String workoutProgramId;
+    String workoutProgram;
 }

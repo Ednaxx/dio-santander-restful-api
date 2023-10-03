@@ -31,6 +31,8 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    // TODO: Test UPDATE relationships
+
     @Override
     public WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
@@ -57,7 +59,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public void delete(String id) {
         var uuid = validateWorkoutProgramId(id);
 
-        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.CONFLICT, "A Workout Program with this login already exists.");
+        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id));
 
         workoutProgramRepository.deleteById(uuid);
     }
@@ -91,10 +93,14 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     public WorkoutProgramResponseDTO update(String id, WorkoutProgramRequestDTO request) {
         var uuid = validateWorkoutProgramId(id);
 
-        if(!workoutProgramRepository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
+        WorkoutProgramModel oldWorkoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
+            () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id))
+        );
 
         WorkoutProgramModel workoutProgramToModify = modelMapper.map(request, WorkoutProgramModel.class);
         workoutProgramToModify.setId(uuid);
+        workoutProgramToModify.setTeacher(oldWorkoutProgram.getTeacher());
+        workoutProgramToModify.setUser(oldWorkoutProgram.getUser());
         WorkoutProgramModel modifiedWorkoutProgram = workoutProgramRepository.save(workoutProgramToModify);
 
         return modelMapper.map(modifiedWorkoutProgram, WorkoutProgramResponseDTO.class);
@@ -122,7 +128,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
             return UUID.fromString(id);
         }
         catch (Exception e) {
-            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+            throw new RestException(HttpStatus.BAD_REQUEST, String.format("%s is not a valid UUID", id));
         }
     }
 

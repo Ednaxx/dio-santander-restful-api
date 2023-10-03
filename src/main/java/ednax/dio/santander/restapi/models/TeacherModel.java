@@ -3,7 +3,6 @@ package ednax.dio.santander.restapi.models;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,7 +38,7 @@ public class TeacherModel {
     @Column(length = 50, nullable = false)
     private String surname;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "teacher", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "teacher", orphanRemoval = true)
     private List<WorkoutProgramModel> workoutPrograms;
 
 }

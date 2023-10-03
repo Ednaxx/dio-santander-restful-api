@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
             return UUID.fromString(id);
         }
         catch (Exception e) {
-            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid UUID");
+            throw new RestException(HttpStatus.BAD_REQUEST, String.format("%s is not a valid UUID", id));
         }
     }
     

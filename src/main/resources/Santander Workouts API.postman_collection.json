@@ -1,0 +1,650 @@
+{
+	"info": {
+		"_postman_id": "facd108f-bc6f-4cd4-9866-e6c34c3391a7",
+		"name": "Santander Workouts API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27378065"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "GET all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/be6e6a78-abb1-4740-99fc-0dafde5e7e76",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"be6e6a78-abb1-4740-99fc-0dafde5e7e76"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/95c0a883-27ee-403a-b406-523a2d8921e6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"95c0a883-27ee-403a-b406-523a2d8921e6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"Fulanin123\",\r\n    \"firstName\": \"Fulanin\",\r\n    \"surname\": \"de Tals\",\r\n    \"sex\": \"Male\",\r\n    \"birthday\": \"01/02/1999\",\r\n    \"weight\": 78.0,\r\n    \"height\": 173\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users/c9522a95-afa9-4c34-beca-977dabdf7e66",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"c9522a95-afa9-4c34-beca-977dabdf7e66"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"someLogin\",\r\n    \"firstName\": \"Fulano\",\r\n    \"surname\": \"de Tal\",\r\n    \"sex\": \"Male\",\r\n    \"birthday\": \"01/01/2000\",\r\n    \"weight\": 80.0,\r\n    \"height\": 180\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET user's workout programs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/de25503c-e889-4330-8ef2-729f0a61f753/workout-programs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"de25503c-e889-4330-8ef2-729f0a61f753",
+								"workout-programs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "teacher",
+			"item": [
+				{
+					"name": "GET all  teachers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET teacher",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers/a864357e-0462-491f-add7-a9e6fccbff07",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								"a864357e-0462-491f-add7-a9e6fccbff07"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST teacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Some\",\r\n    \"surname\": \"Guy\",\r\n    \"login\": \"Teacher1\",\r\n    \"password\": \"123abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/teachers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT teacher",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Some\",\r\n    \"surname\": \"Dude\",\r\n    \"login\": \"Teacher123\",\r\n    \"password\": \"123abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/teachers/21a5dac6-7a3a-4328-b636-c4fde60d97cd",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								"21a5dac6-7a3a-4328-b636-c4fde60d97cd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE teacher",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers/2d68333e-5337-4ca1-afb6-21dd1e068db4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								"2d68333e-5337-4ca1-afb6-21dd1e068db4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "workout program",
+			"item": [
+				{
+					"name": "GET all workout programs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workout-programs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET workout program",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workout-programs/5f2bd97b-75d9-4a50-8e64-3503d6e02a1d",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs",
+								"5f2bd97b-75d9-4a50-8e64-3503d6e02a1d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST workout program",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"October Workout Program\",\r\n    \"teacher\": \"cdf7cf09-26b4-435e-9e21-06b5c4b0d698\",\r\n    \"user\": \"c9522a95-afa9-4c34-beca-977dabdf7e66\",\r\n    \"objective\": \"Hypertrophy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/workout-programs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT workout program",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"September Workout Program\",\r\n    \"teacher\": \"21a5dac6-7a3a-4328-b636-c4fde60d97cd\",\r\n    \"user\": \"de25503c-e889-4330-8ef2-729f0a61f753\",\r\n    \"objective\": \"Hypertrophy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/workout-programs/bc951f2a-f3bd-43e2-a8d1-42cda7197449",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs",
+								"bc951f2a-f3bd-43e2-a8d1-42cda7197449"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE workout program",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workout-programs/9b87fcfc-e0f5-4951-9860-832042f0f6e2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs",
+								"9b87fcfc-e0f5-4951-9860-832042f0f6e2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET workout program's workouts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workout-programs/bc951f2a-f3bd-43e2-a8d1-42cda7197449/workouts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workout-programs",
+								"bc951f2a-f3bd-43e2-a8d1-42cda7197449",
+								"workouts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "workout",
+			"item": [
+				{
+					"name": "GET all workouts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workouts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET workout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workouts/asd",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts",
+								"asd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST workout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"A\",\r\n    \"workoutProgram\": \"bc951f2a-f3bd-43e2-a8d1-42cda7197449\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/workouts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT workout",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"A1\",\r\n    \"workoutProgram\": \"55c28e45-fec9-4ee8-bc1e-e6d5bf3790b5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/workouts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE workout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workouts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET workout's exercises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/workouts/1/exercises",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"workouts",
+								"1",
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "exercise",
+			"item": [
+				{
+					"name": "GET all exercises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/exercises",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET exercise",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/exercises/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exercises",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST exercise",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pullovers\",\r\n    \"duration\": \"3x8\",\r\n    \"workout\": \"1\",\r\n    \"observation\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/exercises",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT exercise",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pulldowns\",\r\n    \"duration\": \"3x8\",\r\n    \"workout\": \"1\",\r\n    \"observation\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/exercises/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exercises",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE exercise",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/exercises/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exercises",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

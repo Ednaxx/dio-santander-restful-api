@@ -29,8 +29,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     public ExerciseResponseDTO create(ExerciseRequestDTO request) {
         ExerciseModel exerciseToSave = modelMapper.map(request, ExerciseModel.class);
         
-        WorkoutModel workout = workoutRepository.findById(WorkoutServiceImpl.validateWorkoutId(request.getWorkoutId()))
-            .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout with id %s does not exists.", request.getWorkoutId()))
+        WorkoutModel workout = workoutRepository.findById(WorkoutServiceImpl.validateWorkoutId(request.getWorkout()))
+            .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout with id %s does not exists.", request.getWorkout()))
         );
 
         ExerciseModel savedExercise = repository.save(exerciseToSave);
@@ -77,6 +77,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Exercise with id %s does not exists.", id));
 
         ExerciseModel exerciseToModify = modelMapper.map(request, ExerciseModel.class);
+        exerciseToModify.setId(longId);
         ExerciseModel modifiedExercise = repository.save(exerciseToModify);
         ExerciseResponseDTO respose = modelMapper.map(modifiedExercise, ExerciseResponseDTO.class);
 
@@ -89,7 +90,7 @@ public class ExerciseServiceImpl implements ExerciseService {
             return Long.parseLong(id);
         }
         catch (Exception e) {
-            throw new RestException(HttpStatus.BAD_REQUEST, "The URI id is not a valid Long id");
+            throw new RestException(HttpStatus.BAD_REQUEST, String.format("%s is not a valid Long", id));
         }
     }
 
