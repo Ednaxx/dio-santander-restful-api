@@ -45,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void delete(String id) {
         var uuid = validateTeacherId(id);
 
-        if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id));
+        if(!repository.findById(uuid).isPresent()) throw new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id));
 
         repository.deleteById(uuid);
     }
@@ -83,7 +83,7 @@ public class TeacherServiceImpl implements TeacherService {
         var uuid = validateTeacherId(id);
 
         TeacherModel oldTeacher = repository.findById(uuid).orElseThrow(
-            () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", id)
+            () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", id)
         ));
 
         TeacherModel teacherToModify = modelMapper.map(request, TeacherModel.class);

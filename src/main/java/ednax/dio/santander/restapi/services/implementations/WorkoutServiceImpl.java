@@ -32,7 +32,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(WorkoutProgramServiceImpl.validateWorkoutProgramId(request.getWorkoutProgram()))
-            .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getWorkoutProgram()))
+            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", request.getWorkoutProgram()))
         );
 
         WorkoutModel savedWorkout = repository.save(workoutToSave);
@@ -86,7 +86,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     public WorkoutResponseDTO update(String id, WorkoutRequestDTO request) {
         var longId = validateWorkoutId(id);
 
-        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id));
+        if(!repository.findById(longId).isPresent()) throw new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id));
 
         WorkoutModel workoutToModify = modelMapper.map(request, WorkoutModel.class);
         workoutToModify.setId(longId);

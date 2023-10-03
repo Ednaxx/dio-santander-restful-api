@@ -37,11 +37,11 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
 
         TeacherModel teacher = teacherRepository.findById(TeacherServiceImpl.validateTeacherId(request.getTeacher()))
                 .orElseThrow(
-                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Teacher with id %s does not exists.", request.getTeacher()))
+                    () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", request.getTeacher()))
                 );
         UserModel user = userRepository.findById(UserServiceImpl.validateUserId(request.getUser()))
                 .orElseThrow(
-                    () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The User with id %s does not exists.", request.getUser()))
+                    () -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", request.getUser()))
                 );
 
         // TODO: Alter this when implementing auth
@@ -92,7 +92,7 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
         var uuid = validateWorkoutProgramId(id);
 
         WorkoutProgramModel oldWorkoutProgram = workoutProgramRepository.findById(uuid).orElseThrow(
-            () -> new RestException(HttpStatus.BAD_REQUEST, String.format("The Workout Program with id %s does not exists.", id))
+            () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", id))
         );
 
         WorkoutProgramModel workoutProgramToModify = modelMapper.map(request, WorkoutProgramModel.class);
