@@ -37,9 +37,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/exercises/{id}").authenticated()
                 .requestMatchers(HttpMethod.POST, "/auth/user/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/teacher/login").permitAll()
-
-                .requestMatchers(HttpMethod.POST, "/teachers").permitAll()
-
                 .anyRequest().hasRole("TEACHER")
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -20,9 +20,7 @@ import ednax.dio.santander.restapi.models.UserModel;
 @Service
 public class TokenService {
 
-    // TODO: FIX THIS
-
-    // @Value("${token.secret}")
+    @Value("${token.secret}")
     private String secret = "sdfonjusf";
     
     private final Algorithm algorithm = Algorithm.HMAC256(secret);

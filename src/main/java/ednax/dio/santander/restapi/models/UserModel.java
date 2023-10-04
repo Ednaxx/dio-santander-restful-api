@@ -33,7 +33,7 @@ public class UserModel implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(length = 55, nullable = false)
+    @Column(length = 55, nullable = false, unique = true)
     private String login;
 
     @Column(length = 50, nullable = false)

@@ -14,6 +14,7 @@ import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
 import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.UserModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
+import ednax.dio.santander.restapi.repositories.TeacherRepository;
 import ednax.dio.santander.restapi.repositories.UserRepository;
 import ednax.dio.santander.restapi.services.UserService;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.AllArgsConstructor;
 public class UserServiceImpl implements UserService {
     
     private final UserRepository repository;
+    private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
         UserModel userToSave = modelMapper.map(request, UserModel.class);
 
         if (repository.findByLogin(userToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A User with this login already exists.");
+        if (teacherRepository.findByLogin(userToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A Teacher with this login already exists.");
 
         UserModel savedUser = repository.save(userToSave);
 
