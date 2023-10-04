@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
@@ -30,6 +31,10 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);
 
         if (repository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A Teacher with this login already exists.");
+
+        // Encripting password
+        String encriptedPassword = new BCryptPasswordEncoder().encode(teacherToSave.getPassword());
+        teacherToSave.setPassword(encriptedPassword);
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 

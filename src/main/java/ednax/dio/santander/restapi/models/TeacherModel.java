@@ -1,7 +1,12 @@
 package ednax.dio.santander.restapi.models;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "teacher")
 @Entity(name = "teacher")
-public class TeacherModel {
+public class TeacherModel implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,7 +34,7 @@ public class TeacherModel {
     @Column(length = 50, nullable = false)
     private String login;
 
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(length = 50, nullable = false)
@@ -40,5 +45,37 @@ public class TeacherModel {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "teacher", orphanRemoval = true)
     private List<WorkoutProgramModel> workoutPrograms;
+
+    // UserDetails methods
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_TEACHER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
