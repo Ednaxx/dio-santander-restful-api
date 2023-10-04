@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
@@ -15,6 +16,7 @@ import ednax.dio.santander.restapi.exceptions.RestException;
 import ednax.dio.santander.restapi.models.TeacherModel;
 import ednax.dio.santander.restapi.models.WorkoutProgramModel;
 import ednax.dio.santander.restapi.repositories.TeacherRepository;
+import ednax.dio.santander.restapi.repositories.UserRepository;
 import ednax.dio.santander.restapi.services.TeacherService;
 import lombok.AllArgsConstructor;
 
@@ -23,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository repository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -30,6 +33,11 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);
 
         if (repository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A Teacher with this login already exists.");
+        if (userRepository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A User with this login already exists.");
+
+        // Encripting password
+        String encriptedPassword = new BCryptPasswordEncoder().encode(teacherToSave.getPassword());
+        teacherToSave.setPassword(encriptedPassword);
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 

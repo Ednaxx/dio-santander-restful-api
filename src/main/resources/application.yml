@@ -1,3 +1,7 @@
+# JWT SECRET
+token:
+  secret: ${JWT_SECRET}
+# DB CONFIG
 spring:
   datasource:
     url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}

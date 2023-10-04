@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
@@ -34,17 +36,13 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
     @Override
     public WorkoutProgramResponseDTO create(WorkoutProgramRequestDTO request) {
         WorkoutProgramModel workoutProgramToSave = modelMapper.map(request, WorkoutProgramModel.class);
-
-        TeacherModel teacher = teacherRepository.findById(TeacherServiceImpl.validateTeacherId(request.getTeacher()))
-                .orElseThrow(
-                    () -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", request.getTeacher()))
-                );
+        
         UserModel user = userRepository.findById(UserServiceImpl.validateUserId(request.getUser()))
                 .orElseThrow(
                     () -> new RestException(HttpStatus.NOT_FOUND, String.format("The User with id %s does not exists.", request.getUser()))
                 );
+        TeacherModel teacher = getAuthenticatedTeacher();
 
-        // TODO: Alter this when implementing auth
         workoutProgramToSave.setTeacher(teacher);
         workoutProgramToSave.setUser(user);
 
@@ -119,6 +117,12 @@ public class WorkoutProgramServiceImpl implements WorkoutProgramService {
             );
             
         return response;
+    }
+
+    private TeacherModel getAuthenticatedTeacher() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return teacherRepository.findByLogin(authentication.getName());
     }
 
     static UUID validateWorkoutProgramId(String id) {
