@@ -26,6 +26,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository repository;
     private final ModelMapper modelMapper;
 
+    // TODO: USERS AND TEACHERS CANNOT HAVE SAME LOGIN <- VALIDATE THAT
+
     @Override
     public TeacherResponseDTO create(TeacherRequestDTO request) {
         TeacherModel teacherToSave = modelMapper.map(request, TeacherModel.class);

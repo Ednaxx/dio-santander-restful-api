@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ednax.dio.santander.restapi.dtos.request.TeacherAuthDTO;
 import ednax.dio.santander.restapi.dtos.request.UserAuthDTO;
+import ednax.dio.santander.restapi.dtos.response.AuthResponseDTO;
+import ednax.dio.santander.restapi.models.TeacherModel;
+import ednax.dio.santander.restapi.models.UserModel;
+import ednax.dio.santander.restapi.services.TokenService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -19,21 +23,27 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private TokenService tokenService;
     
     @PostMapping("/user/login")
-    public ResponseEntity userLogin(@RequestBody @Valid UserAuthDTO request) {
+    public ResponseEntity<AuthResponseDTO> userLogin(@RequestBody @Valid UserAuthDTO request) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), "");
         var auth = authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateUserToken((UserModel) auth.getPrincipal());
         
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
     @PostMapping("/teacher/login")
-    public ResponseEntity teacherLogin(@RequestBody @Valid TeacherAuthDTO request) {
+    public ResponseEntity<AuthResponseDTO> teacherLogin(@RequestBody @Valid TeacherAuthDTO request) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
         var auth = authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateTeacherToken((TeacherModel) auth.getPrincipal());
+
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
 }
