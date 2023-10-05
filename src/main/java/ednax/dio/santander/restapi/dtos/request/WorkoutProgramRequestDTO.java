@@ -13,8 +13,6 @@ public class WorkoutProgramRequestDTO {
     @NotBlank
     String name;
     @NotNull
-    String teacher;
-    @NotNull
     String user;
     @NotBlank String objective;
 }
