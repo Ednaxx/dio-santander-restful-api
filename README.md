@@ -5,6 +5,10 @@ This is a Workout Program Management API developed with: Java 17, Spring Boot, S
 
 Endpoints on: https://workout-management.up.railway.app
 
+## Endpoints documentation
+
+https://documenter.getpostman.com/view/27378065/2s9YJdXNuj
+
 ## Instalation
 
 Java 17 JDK required.
