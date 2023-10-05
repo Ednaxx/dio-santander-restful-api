@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -28,10 +27,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/users/{id}")
-                    .access(new WebExpressionAuthorizationManager("hasRole('TEACHER') or #id == authentication.getId()"))
-                .requestMatchers(HttpMethod.GET, "/users/{id}/workout-programs/")
-                    .access(new WebExpressionAuthorizationManager("hasRole('TEACHER') or #id == authentication.getId()"))
+                .requestMatchers(HttpMethod.GET, "/users/{id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/users/{id}/workout-programs/").authenticated()
                 .requestMatchers(HttpMethod.GET, "/workout-programs/{id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/workout-programs/{id}/workouts").authenticated()
                 .requestMatchers(HttpMethod.GET, "/workouts/{id}").authenticated()

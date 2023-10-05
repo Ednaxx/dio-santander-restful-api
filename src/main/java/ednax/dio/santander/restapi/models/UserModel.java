@@ -66,7 +66,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return "$2a$12$oUspyYnVkc0z4t/1Rw7j2e5AHLYRB9KGd.NG5VJJNku3clZEML1HW";
     }
 
     @Override
