@@ -1,0 +1,13 @@
+# JWT SECRET
+token:
+  secret: ${JWT_SECRET}
+# DB CONFIG
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;NON_KEYWORDS=USER
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+  jpa:
+    defer-datasource-initialization: true
