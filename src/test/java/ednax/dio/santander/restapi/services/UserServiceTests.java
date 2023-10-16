@@ -46,11 +46,12 @@ public class UserServiceTests {
         UserResponseDTO expected = new UserResponseDTO();
         expected.setWorkoutPrograms(new ArrayList<>());
 
+        Mockito.verify(userRepository).save(new UserModel());
         Assertions.assertEquals(expected, response);
     }
 
     @Test
-    public void shouldRaiseExceptionWhenUserLoginAlreadyExists_onCreateUser() {
+    public void shouldThrowExceptionWhenUserLoginAlreadyExists_onCreateUser() {
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("TestLogin");
 
@@ -60,7 +61,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldRaiseExceptionWhenTeacherLoginAlreadyExists_onCreateUser() {
+    public void shouldThrowExceptionWhenTeacherLoginAlreadyExists_onCreateUser() {
         UserRequestDTO request = new UserRequestDTO();
         request.setLogin("TestLogin");
 
@@ -81,7 +82,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldRaiseExceptionWhenUserDoesNotExists_onDeleteUser() {
+    public void shouldThrowExceptionWhenUserDoesNotExists_onDeleteUser() {
         var uuid = UUID.randomUUID();
         Mockito.when(userRepository.findById(uuid)).thenReturn(Optional.empty());
 
@@ -116,7 +117,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldRaiseExceptionWhenUserDoesNotExists_onfindById() {
+    public void shouldThrowExceptionWhenUserDoesNotExists_onFindById() {
         var uuid = UUID.randomUUID();
         Mockito.when(userRepository.findById(uuid)).thenReturn(Optional.empty());
 
@@ -124,7 +125,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldRaiseExceptionWhenIdIsNotValid() {
+    public void shouldThrowExceptionWhenIdIsNotValid() {
         String id = "";
 
         Assertions.assertThrows(RestException.class, () -> userService.findById(id));
@@ -147,11 +148,12 @@ public class UserServiceTests {
         expected.setId(uuid);
         expected.setWorkoutPrograms(new ArrayList<>());
 
+        Mockito.verify(userRepository).save(user);
         Assertions.assertEquals(expected, response);
     }
 
     @Test
-    public void shouldRaiseExceptionWhenUserDoesNotExists_onUpdateUser() {
+    public void shouldThrowExceptionWhenUserDoesNotExists_onUpdateUser() {
         var uuid = UUID.randomUUID();
 
         Mockito.when(userRepository.findById(uuid)).thenReturn(Optional.empty());

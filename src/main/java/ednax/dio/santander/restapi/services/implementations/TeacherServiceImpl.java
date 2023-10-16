@@ -35,9 +35,9 @@ public class TeacherServiceImpl implements TeacherService {
         if (repository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A Teacher with this login already exists.");
         if (userRepository.findByLogin(teacherToSave.getLogin()) != null) throw new RestException(HttpStatus.CONFLICT, "A User with this login already exists.");
 
-        // Encripting password
-        String encriptedPassword = new BCryptPasswordEncoder().encode(teacherToSave.getPassword());
-        teacherToSave.setPassword(encriptedPassword);
+        // Encrypting password
+        String encryptedPassword = new BCryptPasswordEncoder().encode(teacherToSave.getPassword());
+        teacherToSave.setPassword(encryptedPassword);
 
         TeacherModel savedTeacher = repository.save(teacherToSave);
 
