@@ -22,8 +22,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,31 +80,53 @@ public class WorkoutProgramServiceTests {
 
     @Test
     public void shouldDeleteWorkoutProgram() {
+        var uuid = UUID.randomUUID();
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.of(new WorkoutProgramModel()));
+
+        workoutProgramService.delete(uuid.toString());
+        Mockito.verify(workoutProgramRepository).deleteById(uuid);
     }
 
     @Test
     public void shouldThrowExceptionWhenWorkoutProgramDoesNotExists_onDeleteWorkoutProgram() {
+        var uuid = UUID.randomUUID();
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(RestException.class, () -> workoutProgramService.delete(uuid.toString()));
     }
 
 
 
     @Test
     public void shouldFindAllWorkoutPrograms() {
+        Mockito.when(workoutProgramRepository.findAll()).thenReturn(List.of(new WorkoutProgramModel()));
 
+        WorkoutProgramResponseDTO responseProgram = new WorkoutProgramResponseDTO();
+        List<WorkoutProgramResponseDTO> expected = List.of(responseProgram);
+
+        Assertions.assertEquals(expected, workoutProgramService.findAll());
     }
 
 
 
     @Test
     public void shouldFindWorkoutProgramById() {
+        var uuid = UUID.randomUUID();
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.of(new WorkoutProgramModel()));
+
+        Assertions.assertEquals(new WorkoutProgramResponseDTO(), workoutProgramService.findById(uuid.toString()));
     }
 
     @Test
     public void shouldThrowExceptionWhenWorkoutProgramDoesNotExists_onFindWorkoutProgramById() {
+        var uuid = UUID.randomUUID();
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(RestException.class, () -> workoutProgramService.findById(uuid.toString()));
     }
 
     @Test
@@ -118,12 +140,28 @@ public class WorkoutProgramServiceTests {
 
     @Test
     public void shouldUpdateWorkoutProgram() {
+        var uuid = UUID.randomUUID();
+        WorkoutProgramModel workoutProgramModel = new WorkoutProgramModel();
+        workoutProgramModel.setId(uuid);
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.of(workoutProgramModel));
+        Mockito.when(workoutProgramRepository.save(workoutProgramModel)).thenReturn(workoutProgramModel);
+
+        WorkoutProgramResponseDTO response = workoutProgramService.update(uuid.toString(), new WorkoutProgramRequestDTO());
+
+        WorkoutProgramResponseDTO expected = new WorkoutProgramResponseDTO();
+        expected.setId(uuid);
+
+        Assertions.assertEquals(expected, response);
     }
 
     @Test
     public void shouldThrowExceptionWhenWorkoutProgramDoesNotExists_onUpdateWorkoutProgram() {
+        var uuid = UUID.randomUUID();
 
+        Mockito.when(workoutProgramRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(RestException.class, () -> workoutProgramService.update(uuid.toString(), new WorkoutProgramRequestDTO()));
     }
 
 }
