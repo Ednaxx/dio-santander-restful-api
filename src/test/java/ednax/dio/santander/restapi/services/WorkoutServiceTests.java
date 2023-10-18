@@ -154,7 +154,7 @@ public class WorkoutServiceTests {
     }
 
     @Test
-    public void shouldThrowExceptionWhenWorkoutDoesNotExists() {
+    public void shouldThrowExceptionWhenWorkoutDoesNotExists_onUpdateWorkout() {
         long id = 1L;
 
         Mockito.when(workoutRepository.findById(id)).thenReturn(Optional.empty());
@@ -176,6 +176,15 @@ public class WorkoutServiceTests {
         List<ExerciseResponseDTO> expected = List.of(new ExerciseResponseDTO());
 
         Assertions.assertEquals(expected, workoutService.findWorkoutsExercises(Long.toString(id)));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenWorkoutDoesNotExists_onFindWorkoutExercises() {
+        long id = 1L;
+
+        Mockito.when(workoutRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(RestException.class, () -> workoutService.findWorkoutsExercises(Long.toString(id)));
     }
 
 
