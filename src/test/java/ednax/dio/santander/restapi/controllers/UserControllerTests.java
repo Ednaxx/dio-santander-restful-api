@@ -61,7 +61,7 @@ public class UserControllerTests {
         Mockito.when(userService.findById(id.toString())).thenReturn(new UserResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s", id.toString()))
+                .get(String.format("/users/%s", id))
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
@@ -105,7 +105,7 @@ public class UserControllerTests {
         Mockito.doNothing().when(userService).delete(id.toString());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete(String.format("/users/%s", id.toString()))
+                .delete(String.format("/users/%s", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -132,7 +132,7 @@ public class UserControllerTests {
                 .thenReturn(new UserResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(String.format("/users/%s", id.toString()))
+                .put(String.format("/users/%s", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -152,7 +152,7 @@ public class UserControllerTests {
                 .thenReturn(List.of(new WorkoutProgramResponseDTO()));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s/workout-programs", id.toString()))
+                .get(String.format("/users/%s/workout-programs", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 

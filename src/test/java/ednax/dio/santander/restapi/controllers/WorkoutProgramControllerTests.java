@@ -59,7 +59,7 @@ public class WorkoutProgramControllerTests {
         Mockito.when(workoutProgramService.findById(id.toString())).thenReturn(new WorkoutProgramResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/workout-programs/%s", id.toString()))
+                .get(String.format("/workout-programs/%s", id))
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
@@ -100,7 +100,7 @@ public class WorkoutProgramControllerTests {
         Mockito.doNothing().when(workoutProgramService).delete(id.toString());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete(String.format("/workout-programs/%s", id.toString()))
+                .delete(String.format("/workout-programs/%s", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -124,7 +124,7 @@ public class WorkoutProgramControllerTests {
                 .thenReturn(new WorkoutProgramResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(String.format("/workout-programs/%s", id.toString()))
+                .put(String.format("/workout-programs/%s", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -144,7 +144,7 @@ public class WorkoutProgramControllerTests {
                 .thenReturn(List.of(new WorkoutResponseDTO()));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/workout-programs/%s/workouts", id.toString()))
+                .get(String.format("/workout-programs/%s/workouts", id))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
