@@ -1,7 +1,14 @@
 # Workout Management Api
 Restful API developed for Santander's Java BackEnd Bootcamp.
 
-This is a Workout Program Management API developed with: Java 17, Spring Boot, Spring security, JWT and PostgreSQL and hosted on Railway.
+This is a Workout Program Management API developed with: 
+- Java 17
+- Spring Boot
+- Spring security
+- JWT
+- JUnit and Mockito
+- PostgreSQL
+- And hosted on Railway.
 
 Endpoints on: https://workout-management.up.railway.app
 
@@ -9,7 +16,7 @@ Endpoints on: https://workout-management.up.railway.app
 
 https://documenter.getpostman.com/view/27378065/2s9YJdXNuj
 
-## Instalation
+## Installation
 
 Java 17 JDK required.
 
@@ -17,7 +24,7 @@ Java 17 JDK required.
 
 2. Install maven dependencies
 
-3. Set the Enviromment Variables according to the application.yml (you can use ```ddl-auto: create``` on your first run, to automatically create the db tables. Then you can set it as 'validate' again);
+3. Set the Environment Variables according to the application.yml (you can use ```ddl-auto: create``` on your first run, to automatically create the db tables. Then you can set it as 'validate' again);
 
 4. You will have to manually insert the first Teacher on database.
 
