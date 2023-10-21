@@ -77,3 +77,7 @@ The API will be available at http://localhost:8080
         String observation
     }
 ```
+
+## Tests Coverage
+
+![Tests Coverage](src/test/resources/testsCoverage.png)
