@@ -2,17 +2,15 @@ package ednax.dio.santander.restapi.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import ednax.dio.santander.restapi.dtos.request.TeacherRequestDTO;
 import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
+import ednax.dio.santander.restapi.dtos.response.TeacherResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
-import ednax.dio.santander.restapi.models.UserModel;
-import ednax.dio.santander.restapi.services.implementations.UserServiceImpl;
-import net.minidev.json.parser.JSONParser;
+import ednax.dio.santander.restapi.services.implementations.TeacherServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,42 +28,42 @@ import java.util.List;
 import java.util.UUID;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(UserController.class)
-@ContextConfiguration(classes = UserController.class)
-public class UserControllerTests {
+@WebMvcTest(TeacherController.class)
+@ContextConfiguration(classes = TeacherController.class)
+public class TeacherControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserServiceImpl userService;
+    private TeacherServiceImpl teacherService;
 
     private final ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
+
     @Test
     public void getAll() throws Exception {
-        List<UserResponseDTO> users = List.of(new UserResponseDTO());
+        List<TeacherResponseDTO> teachers = List.of(new TeacherResponseDTO());
 
-        Mockito.when(userService.findAll()).thenReturn(users);
+        Mockito.when(teacherService.findAll()).thenReturn(teachers);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/users")
+                .get("/teachers")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
     }
 
     @Test
-    public void getBtId() throws Exception {
+    public void getById() throws Exception {
         var id = UUID.randomUUID();
-        Mockito.when(userService.findById(id.toString())).thenReturn(new UserResponseDTO());
+        Mockito.when(teacherService.findById(id.toString())).thenReturn(new TeacherResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s", id.toString()))
+                .get(String.format("/teachers/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
@@ -76,21 +74,19 @@ public class UserControllerTests {
 
     @Test
     public void create() throws Exception {
-        Mockito.when(userService.create(Mockito.any(UserRequestDTO.class)))
-                .thenReturn(new UserResponseDTO());
+        Mockito.when(teacherService.create(Mockito.any(TeacherRequestDTO.class)))
+                .thenReturn(new TeacherResponseDTO());
 
-        UserRequestDTO userRequest = new UserRequestDTO(
-                "login",
+        TeacherRequestDTO teacherRequest = new TeacherRequestDTO(
                 "firstName",
                 "surname",
-                "male",
-                new Date(),
-                BigDecimal.ONE,
-                1);
-        String jsonRequest = objectWriter.writeValueAsString(userRequest);
+                "login",
+                "password"
+        );
+        String jsonRequest = objectWriter.writeValueAsString(teacherRequest);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/users")
+                .post("/teachers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -100,16 +96,15 @@ public class UserControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
     }
 
     @Test
     public void delete() throws Exception {
         var id = UUID.randomUUID();
-        Mockito.doNothing().when(userService).delete(id.toString());
+        Mockito.doNothing().when(teacherService).delete(id.toString());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete(String.format("/users/%s", id.toString()))
+                .delete(String.format("/teachers/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -122,21 +117,18 @@ public class UserControllerTests {
     public void update() throws Exception {
         var id = UUID.randomUUID();
 
-        UserRequestDTO userRequest = new UserRequestDTO(
-                "login",
+        TeacherRequestDTO teacherRequest = new TeacherRequestDTO(
                 "firstName",
                 "surname",
-                "male",
-                new Date(),
-                BigDecimal.ONE,
-                1);
-        String jsonRequest = objectWriter.writeValueAsString(userRequest);
+                "login",
+                "password");
+        String jsonRequest = objectWriter.writeValueAsString(teacherRequest);
 
-        Mockito.when(userService.update(id.toString(), userRequest))
-                .thenReturn(new UserResponseDTO());
+        Mockito.when(teacherService.update(id.toString(), teacherRequest))
+                .thenReturn(new TeacherResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(String.format("/users/%s", id.toString()))
+                .put(String.format("/teachers/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -145,18 +137,17 @@ public class UserControllerTests {
         MvcResult result = mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-
     }
 
     @Test
-    public void getUsersWorkoutPrograms() throws Exception {
+    public void getTeachersWorkoutPrograms() throws Exception {
         var id = UUID.randomUUID();
 
-        Mockito.when(userService.findUsersWorkoutPrograms(id.toString()))
+        Mockito.when(teacherService.findTeachersWorkoutPrograms(id.toString()))
                 .thenReturn(List.of(new WorkoutProgramResponseDTO()));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s/workout-programs", id.toString()))
+                .get(String.format("/teachers/%s/workout-programs", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -164,7 +155,6 @@ public class UserControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
     }
 
 
