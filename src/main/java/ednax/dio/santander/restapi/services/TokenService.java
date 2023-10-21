@@ -21,11 +21,10 @@ import ednax.dio.santander.restapi.models.UserModel;
 public class TokenService {
 
     @Value("${token.secret}")
-    private String secret = "sdfonjusf";
-    
-    private final Algorithm algorithm = Algorithm.HMAC256(secret);
+    private String secret;
     
     public String generateUserToken(UserModel user) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         try {
             String token = JWT.create()
                 .withIssuer("auth-api")
@@ -41,6 +40,7 @@ public class TokenService {
     }
 
     public String generateTeacherToken(TeacherModel teacher) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         try {
             String token = JWT.create()
                 .withIssuer("auth-api")
@@ -56,6 +56,7 @@ public class TokenService {
     }
 
     public String validateToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         try {
             return JWT.require(algorithm)
                 .withIssuer("auth-api")

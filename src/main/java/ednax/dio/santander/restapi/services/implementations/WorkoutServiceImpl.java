@@ -32,7 +32,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         WorkoutModel workoutToSave = modelMapper.map(request, WorkoutModel.class);
 
         WorkoutProgramModel workoutProgram = workoutProgramRepository.findById(WorkoutProgramServiceImpl.validateWorkoutProgramId(request.getWorkoutProgram()))
-            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Teacher with id %s does not exists.", request.getWorkoutProgram()))
+            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, String.format("The Workout Program with id %s does not exists.", request.getWorkoutProgram()))
         );
 
         WorkoutModel savedWorkout = repository.save(workoutToSave);
