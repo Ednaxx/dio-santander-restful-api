@@ -2,10 +2,10 @@ package ednax.dio.santander.restapi.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import ednax.dio.santander.restapi.dtos.request.UserRequestDTO;
-import ednax.dio.santander.restapi.dtos.response.UserResponseDTO;
+import ednax.dio.santander.restapi.dtos.request.WorkoutProgramRequestDTO;
 import ednax.dio.santander.restapi.dtos.response.WorkoutProgramResponseDTO;
-import ednax.dio.santander.restapi.services.implementations.UserServiceImpl;
+import ednax.dio.santander.restapi.dtos.response.WorkoutResponseDTO;
+import ednax.dio.santander.restapi.services.implementations.WorkoutProgramServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,32 +20,30 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(UserController.class)
-@ContextConfiguration(classes = UserController.class)
-public class UserControllerTests {
+@WebMvcTest(WorkoutProgramController.class)
+@ContextConfiguration(classes = WorkoutProgramController.class)
+public class WorkoutProgramControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserServiceImpl userService;
+    private WorkoutProgramServiceImpl workoutProgramService;
 
     private final ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
     @Test
     public void getAll() throws Exception {
-        List<UserResponseDTO> users = List.of(new UserResponseDTO());
+        List<WorkoutProgramResponseDTO> workoutPrograms = List.of(new WorkoutProgramResponseDTO());
 
-        Mockito.when(userService.findAll()).thenReturn(users);
+        Mockito.when(workoutProgramService.findAll()).thenReturn(workoutPrograms);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/users")
+                .get("/workout-programs")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
@@ -58,10 +56,10 @@ public class UserControllerTests {
     @Test
     public void getBtId() throws Exception {
         var id = UUID.randomUUID();
-        Mockito.when(userService.findById(id.toString())).thenReturn(new UserResponseDTO());
+        Mockito.when(workoutProgramService.findById(id.toString())).thenReturn(new WorkoutProgramResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s", id.toString()))
+                .get(String.format("/workout-programs/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(request)
@@ -72,21 +70,18 @@ public class UserControllerTests {
 
     @Test
     public void create() throws Exception {
-        Mockito.when(userService.create(Mockito.any(UserRequestDTO.class)))
-                .thenReturn(new UserResponseDTO());
+        Mockito.when(workoutProgramService.create(Mockito.any(WorkoutProgramRequestDTO.class)))
+                .thenReturn(new WorkoutProgramResponseDTO());
 
-        UserRequestDTO userRequest = new UserRequestDTO(
-                "login",
-                "firstName",
-                "surname",
-                "male",
-                new Date(),
-                BigDecimal.ONE,
-                1);
-        String jsonRequest = objectWriter.writeValueAsString(userRequest);
+        WorkoutProgramRequestDTO workoutProgramRequest = new WorkoutProgramRequestDTO(
+                "name",
+                UUID.randomUUID().toString(),
+                "objective"
+        );
+        String jsonRequest = objectWriter.writeValueAsString(workoutProgramRequest);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/users")
+                .post("/workout-programs")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -102,10 +97,10 @@ public class UserControllerTests {
     @Test
     public void delete() throws Exception {
         var id = UUID.randomUUID();
-        Mockito.doNothing().when(userService).delete(id.toString());
+        Mockito.doNothing().when(workoutProgramService).delete(id.toString());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .delete(String.format("/users/%s", id.toString()))
+                .delete(String.format("/workout-programs/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -118,21 +113,18 @@ public class UserControllerTests {
     public void update() throws Exception {
         var id = UUID.randomUUID();
 
-        UserRequestDTO userRequest = new UserRequestDTO(
-                "login",
-                "firstName",
-                "surname",
-                "male",
-                new Date(),
-                BigDecimal.ONE,
-                1);
-        String jsonRequest = objectWriter.writeValueAsString(userRequest);
+        WorkoutProgramRequestDTO workoutProgramRequest = new WorkoutProgramRequestDTO(
+                "name",
+                UUID.randomUUID().toString(),
+                "objective"
+        );
+        String jsonRequest = objectWriter.writeValueAsString(workoutProgramRequest);
 
-        Mockito.when(userService.update(id.toString(), userRequest))
-                .thenReturn(new UserResponseDTO());
+        Mockito.when(workoutProgramService.update(id.toString(), workoutProgramRequest))
+                .thenReturn(new WorkoutProgramResponseDTO());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(String.format("/users/%s", id.toString()))
+                .put(String.format("/workout-programs/%s", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
@@ -148,11 +140,11 @@ public class UserControllerTests {
     public void getUsersWorkoutPrograms() throws Exception {
         var id = UUID.randomUUID();
 
-        Mockito.when(userService.findUsersWorkoutPrograms(id.toString()))
-                .thenReturn(List.of(new WorkoutProgramResponseDTO()));
+        Mockito.when(workoutProgramService.findProgramsWorkouts(id.toString()))
+                .thenReturn(List.of(new WorkoutResponseDTO()));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get(String.format("/users/%s/workout-programs", id.toString()))
+                .get(String.format("/workout-programs/%s/workouts", id.toString()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -162,6 +154,5 @@ public class UserControllerTests {
                 .andReturn();
 
     }
-
 
 }
