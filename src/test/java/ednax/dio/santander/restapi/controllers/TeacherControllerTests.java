@@ -72,8 +72,11 @@ public class TeacherControllerTests {
 
     @Test
     public void create() throws Exception {
+        var teacherResponse = new TeacherResponseDTO();
+        teacherResponse.setId(UUID.randomUUID());
+
         Mockito.when(teacherService.create(Mockito.any(TeacherRequestDTO.class)))
-                .thenReturn(new TeacherResponseDTO());
+                .thenReturn(teacherResponse);
 
         TeacherRequestDTO teacherRequest = new TeacherRequestDTO(
                 "firstName",

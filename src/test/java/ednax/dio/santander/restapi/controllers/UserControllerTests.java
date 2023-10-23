@@ -72,8 +72,11 @@ public class UserControllerTests {
 
     @Test
     public void create() throws Exception {
+        var userResponse = new UserResponseDTO();
+        userResponse.setId(UUID.randomUUID());
+
         Mockito.when(userService.create(Mockito.any(UserRequestDTO.class)))
-                .thenReturn(new UserResponseDTO());
+                .thenReturn(userResponse);
 
         UserRequestDTO userRequest = new UserRequestDTO(
                 "login",

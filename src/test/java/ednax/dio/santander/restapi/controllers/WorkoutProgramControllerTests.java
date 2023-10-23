@@ -70,8 +70,11 @@ public class WorkoutProgramControllerTests {
 
     @Test
     public void create() throws Exception {
+        var workoutProgramResponse = new WorkoutProgramResponseDTO();
+        workoutProgramResponse.setId(UUID.randomUUID());
+
         Mockito.when(workoutProgramService.create(Mockito.any(WorkoutProgramRequestDTO.class)))
-                .thenReturn(new WorkoutProgramResponseDTO());
+                .thenReturn(workoutProgramResponse);
 
         WorkoutProgramRequestDTO workoutProgramRequest = new WorkoutProgramRequestDTO(
                 "name",
