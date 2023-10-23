@@ -1,5 +1,8 @@
 package ednax.dio.santander.restapi.controllers;
 
+import ednax.dio.santander.restapi.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +24,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -28,21 +33,31 @@ public class AuthController {
     
     @PostMapping("/user/login")
     public ResponseEntity<AuthResponseDTO> userLogin(@RequestBody @Valid UserAuthDTO request) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), "user");
-        var auth = authenticationManager.authenticate(usernamePassword);
+        logger.info("Trying user auth...");
 
+        var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), "user");
+
+        if (!usernamePassword.isAuthenticated()) logger.info("Auth failed.");
+
+        var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateUserToken((UserModel) auth.getPrincipal());
-        
+
+        logger.info(request.login() + "authenticated.");
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
     @PostMapping("/teacher/login")
     public ResponseEntity<AuthResponseDTO> teacherLogin(@RequestBody @Valid TeacherAuthDTO request) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
+        logger.info("Trying teacher auth...");
 
+        var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
+
+        if (!usernamePassword.isAuthenticated()) logger.info("Auth failed.");
+
+        var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateTeacherToken((TeacherModel) auth.getPrincipal());
 
+        logger.info(request.login() + "authenticated.");
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 

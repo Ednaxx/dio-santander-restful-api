@@ -4,6 +4,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import ednax.dio.santander.restapi.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import ednax.dio.santander.restapi.models.UserModel;
 
 @Service
 public class TokenService {
+
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     @Value("${token.secret}")
     private String secret;
