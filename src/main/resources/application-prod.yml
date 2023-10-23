@@ -7,6 +7,7 @@ spring:
     url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
     username: ${PGUSER}
     password: ${PGPASSWORD}
+    initialization-mode: never
   jpa:
     open-in-view: false
     hibernate:
