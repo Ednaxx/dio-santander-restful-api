@@ -37,12 +37,10 @@ public class AuthController {
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), "user");
 
-        if (!usernamePassword.isAuthenticated()) logger.info("Auth failed.");
-
         var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateUserToken((UserModel) auth.getPrincipal());
 
-        logger.info(request.login() + "authenticated.");
+        logger.info(request.login() + " authenticated.");
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
@@ -52,12 +50,10 @@ public class AuthController {
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
 
-        if (!usernamePassword.isAuthenticated()) logger.info("Auth failed.");
-
         var auth = authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateTeacherToken((TeacherModel) auth.getPrincipal());
 
-        logger.info(request.login() + "authenticated.");
+        logger.info(request.login() + " authenticated.");
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
