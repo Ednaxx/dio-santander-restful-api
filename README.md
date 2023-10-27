@@ -9,6 +9,7 @@ to other Users. Feel free to fork and contribute :D
 - JWT
 - JUnit and Mockito
 - PostgreSQL
+- Bucket4j + caffeine - spring boot starter
 - And hosted on Railway on: https://workout-management.up.railway.app
 
 ## API Endpoints documentation
