@@ -12,3 +12,23 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+  cache:
+    jcache:
+      provider: com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
+    cache-names:
+      - buckets
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=3600s
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: buckets
+      url: .*
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"Too many requests\" }"
+      rate-limits:
+        - bandwidths:
+            - capacity: 2
+              time: 1
+              unit: seconds
+              refill-speed: interval
